@@ -1,54 +1,66 @@
-/* .primitive-colors */
-/* Mode: Mode 1 */
+/* ─── Primitive Colors ───────────────────────────────────────────────── */
 .mode-1 {
-  --grey-00: #ffffff;
-  --grey-10: #f1f1f1;
-  --grey-20: #ebe3de;
-  --grey-90: #2b2b2b;
-  --orange-50: #d89a7f;
-  --green-50: #006c3f;
+  --grey-00:    #ffffff;
+  --grey-10:    #f1f1f1;
+  --grey-20:    #ebe3de;
+  --grey-90:    #2b2b2b;
+  --orange-50:  #d89a7f;
+  --green-50:   #006c3f;
 }
-/* brand colors */
-/* Mode: light */
+
+/* ─── Brand Colors — Light ───────────────────────────────────────────── */
 .light {
   --secondary-00: var(--grey-00);
-  --primary-10: var(--grey-10);
-  --primary-20: var(--grey-20);
-  --accent-50: var(--orange-50);
-  --tertiary-50: var(--green-50);
+  --primary-10:   var(--grey-10);
+  --primary-20:   var(--grey-20);
+  --accent-50:    var(--orange-50);
+  --tertiary-50:  var(--green-50);
   --secondary-90: var(--grey-90);
 }
-/* Mode: dark */
+
+/* ─── Brand Colors — Dark ────────────────────────────────────────────── */
 .dark {
   --secondary-00: var(--grey-00);
-  --primary-10: var(--grey-90);
-  --primary-20: var(--grey-20);
-  --accent-50: var(--orange-50);
-  --tertiary-50: var(--green-50);
+  --primary-10:   var(--grey-90);
+  --primary-20:   var(--grey-20);
+  --accent-50:    var(--orange-50);
+  --tertiary-50:  var(--green-50);
   --secondary-90: var(--grey-10);
 }
-/* typography */
-/* Mode: Mode 1 */
+
+/* ─── Typography ─────────────────────────────────────────────────────── */
 .mode-1 {
-  --text-size-font-size-s: 16px;
-  --text-size-font-size-m: 24px;
-  --text-size-font-size-l: 32px;
-  --text-size-font-size-xl: 40px;
-  --text-size-font-size-xxxl: 96px;
-  --text-weight-font-weight-default: "regular";
-  --text-weight-font-weight-heavy: "bold";
-  --text-weight-font-weight-medium: "medium";
-  --font-family-font-family: "Fraunces";
-  --font-family-font-family-body: "Inter";
+  --text-size-s:    16px;
+  --text-size-m:    24px;
+  --text-size-l:    32px;
+  --text-size-xl:   40px;
+  --text-size-xxxl: 96px;
+
+  --font-weight-default: 400;
+  --font-weight-medium:  500;
+  --font-weight-heavy:   700;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body:    "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
-/* spacing */
-/* Mode: Mode 1 */
+
+/* ─── Spacing ────────────────────────────────────────────────────────── */
 .mode-1 {
-  --xs: 8px;
-  --s: 16px;
-  --m: 24px;
-  --l: 32px;
-  --xl: 40px;
-  --xxl: 56px;
+  --xs:   8px;
+  --s:    16px;
+  --m:    24px;
+  --l:    32px;
+  --xl:   40px;
+  --xxl:  56px;
   --xxxl: 72px;
+}
+
+/* ─── Component Tokens ───────────────────────────────────────────────── */
+.mode-1 {
+  --radius:      22px;
+  --shadow:      0 18px 60px rgba(0,0,0,.10);
+  --muted:       rgba(43,43,43,.70);
+  --bunny-brown: #8B6F47;
+  --bunny-dark:  #7A5C3A;
+  --bunny-inner: #A0826D;
 }
