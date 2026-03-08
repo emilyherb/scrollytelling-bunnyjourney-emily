@@ -47,20 +47,20 @@ const STORY = [
   },
   {
     kicker: "NAMING THINGS",
-    text: "I learned the edges of the room. The safe corners. The places where light warmed the floor.",
-    small: ""
+    text: "Some feelings stay. Some feeling change.",
+    small: "Naming them helped to tell them apart."
   },
   {
     kicker: "THE SWITCH",
-    text: "When I finally moved, it was quiet. Like a secret I was telling myself.",
+    text: "Not everything makes me run, but some things do.",
     small: ""
   },
   {
     kicker: "THE MEMORY",
-    text: "Some days were still. Some days were brave. Either way, I stayed.",
-    small: ""
+    text: "I don't relearn the world every day.",
+    small: "I remember what happens next before it even happens."
   },
-  { kicker: "THE END", text: "", small: "" }
+  { kicker: "THE END", text: "The world still surprises me. I still make mistakes. I still have to listen. But now, when something new arrives, I don't freeze the way I used to. I watch. I test. I learn.", small: "" }
 ];
 
 /* ─── Code content ───────────────────────────────────────────────────── */
@@ -356,12 +356,7 @@ function showNamingCallouts() {
 function updateNamingCallouts(progress) {
   if (!calloutEnergy || !calloutHunger || !calloutMood || !calloutSafe) return;
 
-  if (progress < 0.25) {
-    calloutEnergy.textContent = "20";
-    calloutHunger.textContent = "75";
-    calloutMood.textContent = `"unsure"`;
-    calloutSafe.textContent = "false";
-  } else if (progress < 0.5) {
+  if (progress < 0.5) {
     calloutEnergy.textContent = "38";
     calloutHunger.textContent = "58";
     calloutMood.textContent = `"curious"`;
@@ -370,11 +365,6 @@ function updateNamingCallouts(progress) {
     calloutEnergy.textContent = "61";
     calloutHunger.textContent = "36";
     calloutMood.textContent = `"calm"`;
-    calloutSafe.textContent = "true";
-  } else {
-    calloutEnergy.textContent = "84";
-    calloutHunger.textContent = "18";
-    calloutMood.textContent = `"content"`;
     calloutSafe.textContent = "true";
   }
 }
