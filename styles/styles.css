@@ -63,7 +63,6 @@ body {
   width: 100%;
   overflow: hidden;
   z-index: 10;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,7 +75,6 @@ body {
   width: 100%;
   padding: var(--s);
   overflow: hidden;
-
   display: grid;
   grid-template-rows: 1fr auto;
   justify-items: center;
@@ -117,7 +115,8 @@ body {
 .light {
   position: absolute;
   inset: -30%;
-  background: radial-gradient(520px 420px at 20% 20%,
+  background: radial-gradient(
+    520px 420px at 20% 20%,
     rgba(216, 154, 127, 0.35),
     rgba(216, 154, 127, 0)
   );
@@ -143,30 +142,27 @@ body {
 }
 
 /* ─── Code Layer ─────────────────────────────────────────────────────── */
-.codeLayer{
-  position:absolute;
-  inset:14px;
-  border-radius:var(--radius);
-  overflow:hidden;
-  z-index:1;
-  pointer-events:none;
-  opacity:0;
-  transform:translateY(10px);
-  display:grid;
-  place-items:center;
+.codeLayer {
+  position: absolute;
+  inset: 14px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  display: grid;
+  place-items: center;
 }
 
-/* no box now, just floating code */
-.codeBlock{
-  margin:0;
-  width:min(760px, 86vw);
-  height:min(56vh, 520px);
+.codeBlock {
+  margin: 0;
+  width: min(760px, 86vw);
+  height: min(56vh, 520px);
   padding: 22px 26px;
-
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 14px;
   line-height: 1.65;
-
   color: rgba(43,43,43,.58);
   white-space: pre;
   text-shadow: 0 1px 0 rgba(255,255,255,.28);
@@ -174,7 +170,6 @@ body {
   background: transparent;
   border: none;
   box-shadow: none;
-
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
   -webkit-mask-size: 100% 100%;
@@ -223,19 +218,14 @@ body {
   z-index: 3;
 }
 
-#bunnyStory {
-  opacity: 0;
-  visibility: hidden;
-  z-index: 3;
-}
-
+#bunnyStory,
 #bunnyFace {
   opacity: 0;
   visibility: hidden;
   z-index: 3;
 }
 
-/* hay sits in front-left of the bunny */
+/* ─── Hay ────────────────────────────────────────────────────────────── */
 .hayWrap {
   position: absolute;
   left: -40%;
@@ -255,7 +245,45 @@ body {
   filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
 }
 
-/* Title between ears */
+.haySingleWrap {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 120px;
+  z-index: 5;
+  transform: rotate(6deg);
+  pointer-events: none;
+}
+
+.haySingle {
+  display: block;
+  width: 175%;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.08));
+}
+
+/* ─── Bookshelf ──────────────────────────────────────────────────────── */
+.bookshelfWrap {
+  position: absolute;
+  left: 80%;
+  top: -15%;
+  width: min(340px, 44vw);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -56%) scale(0.96);
+  transform-origin: 50% 50%;
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 16px 24px rgba(0,0,0,.10));
+}
+
+.bookshelfWrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ─── Title ──────────────────────────────────────────────────────────── */
 .title-text {
   position: absolute;
   top: 28%;
@@ -285,6 +313,46 @@ body {
   margin: var(--s) 0 0;
   opacity: 0;
 }
+
+/* ─── Naming Things Callouts ────────────────────────────────────────── */
+.namingCallouts {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.callout {
+  position: absolute;
+  min-width: 140px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(241, 241, 241, 0.62);
+  border: 1px solid rgba(0,0,0,.08);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+
+.calloutValue {
+  font-size: 16px;
+  line-height: 1.2;
+  color: rgba(0,0,0,.88);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.calloutPrefix {
+  color: rgba(43,43,43,.52);
+  font-style: italic;
+}
+
+.callout--1 { left: 10%; top: 20%; }
+.callout--2 { right: 8%; top: 24%; }
+.callout--3 { left: 8%; bottom: 24%; }
+.callout--4 { right: 12%; bottom: 18%; }
 
 /* ─── Caption Area ───────────────────────────────────────────────────── */
 .captionArea {
@@ -342,17 +410,33 @@ body {
 }
 
 @media (max-width: 900px) {
-  .hayWrap {
-    left: -12%;
-    bottom: 13%;
-    width: min(220px, 34vw);
+  .bookshelfWrap {
+    width: min(280px, 48vw);
+    transform: translate(-50%, -55%) scale(0.96);
   }
+
+  .callout {
+    min-width: 120px;
+    padding: 8px 10px;
+  }
+
+  .calloutValue {
+    font-size: 15px;
+  }
+
+  .callout--1 { left: 2%; top: 18%; }
+  .callout--2 { right: 2%; top: 21%; }
+  .callout--3 { left: 2%; bottom: 24%; }
+  .callout--4 { right: 2%; bottom: 17%; }
 }
 
 @media (max-width: 640px) {
-  .hayWrap {
-    left: -4%;
-    bottom: 14%;
-    width: min(180px, 32vw);
+  .callout {
+    min-width: 104px;
+    border-radius: 12px;
+  }
+
+  .calloutValue {
+    font-size: 13px;
   }
 }

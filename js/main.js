@@ -17,10 +17,18 @@ const bunnyIntro = document.getElementById("bunnyIntro");
 const bunnyStory = document.getElementById("bunnyStory");
 const bunnyFace = document.getElementById("bunnyFace");
 const hayWrap = document.getElementById("hayWrap");
+const bookshelfWrap = document.getElementById("bookshelfWrap");
+
+const namingCallouts = document.getElementById("namingCallouts");
+const calloutEnergy = document.getElementById("calloutEnergy");
+const calloutHunger = document.getElementById("calloutHunger");
+const calloutMood = document.getElementById("calloutMood");
+const calloutSafe = document.getElementById("calloutSafe");
 
 const introStep = document.querySelector(".step--intro");
 const steps = Array.from(document.querySelectorAll(".step[data-step]"));
 const step2 = document.querySelector('.step[data-step="1"]'); // The Arrival
+const namingThingsStep = document.querySelector('.step[data-step="3"]');
 
 /* ─── Story Content ──────────────────────────────────────────────────── */
 const STORY = [
@@ -265,6 +273,112 @@ function showHay() {
   );
 }
 
+/* ─── Bookshelf helpers ──────────────────────────────────────────────── */
+function hideBookshelf() {
+  if (!bookshelfWrap) return;
+  gsap.killTweensOf(bookshelfWrap);
+  gsap.to(bookshelfWrap, {
+    opacity: 0,
+    y: 10,
+    scale: 0.96,
+    duration: 0.25,
+    ease: "power2.out",
+    overwrite: true,
+    onStart: () => gsap.set(bookshelfWrap, { visibility: "visible" }),
+    onComplete: () => gsap.set(bookshelfWrap, { visibility: "hidden" })
+  });
+}
+
+function showBookshelf() {
+  if (!bookshelfWrap) return;
+  gsap.killTweensOf(bookshelfWrap);
+  gsap.set(bookshelfWrap, { visibility: "visible" });
+  gsap.fromTo(
+    bookshelfWrap,
+    { opacity: 0, y: 14, scale: 0.94 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out", overwrite: true }
+  );
+}
+
+/* ─── Naming Things callouts ────────────────────────────────────────── */
+function hideNamingCallouts() {
+  if (!namingCallouts) return;
+
+  const items = namingCallouts.querySelectorAll(".callout");
+  gsap.killTweensOf([namingCallouts, ...items]);
+
+  gsap.to(items, {
+    opacity: 0,
+    y: 8,
+    scale: 0.98,
+    duration: 0.2,
+    stagger: 0.03,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to(namingCallouts, {
+    opacity: 0,
+    duration: 0.2,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => gsap.set(namingCallouts, { visibility: "hidden" })
+  });
+}
+
+function showNamingCallouts() {
+  if (!namingCallouts) return;
+
+  const items = namingCallouts.querySelectorAll(".callout");
+  gsap.killTweensOf([namingCallouts, ...items]);
+
+  gsap.set(namingCallouts, { visibility: "visible" });
+  gsap.set(items, { opacity: 0, y: 8, scale: 0.98 });
+
+  gsap.to(namingCallouts, {
+    opacity: 1,
+    duration: 0.2,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to(items, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.3,
+    stagger: 0.05,
+    ease: "power2.out",
+    overwrite: true
+  });
+}
+
+function updateNamingCallouts(progress) {
+  if (!calloutEnergy || !calloutHunger || !calloutMood || !calloutSafe) return;
+
+  if (progress < 0.25) {
+    calloutEnergy.textContent = "20";
+    calloutHunger.textContent = "75";
+    calloutMood.textContent = `"unsure"`;
+    calloutSafe.textContent = "false";
+  } else if (progress < 0.5) {
+    calloutEnergy.textContent = "38";
+    calloutHunger.textContent = "58";
+    calloutMood.textContent = `"curious"`;
+    calloutSafe.textContent = "false";
+  } else if (progress < 0.75) {
+    calloutEnergy.textContent = "61";
+    calloutHunger.textContent = "36";
+    calloutMood.textContent = `"calm"`;
+    calloutSafe.textContent = "true";
+  } else {
+    calloutEnergy.textContent = "84";
+    calloutHunger.textContent = "18";
+    calloutMood.textContent = `"content"`;
+    calloutSafe.textContent = "true";
+  }
+}
+
 function setup() {
   ScrollTrigger.getAll().forEach((st) => st.kill());
 
@@ -277,7 +391,18 @@ function setup() {
   gsap.set(bunnyStory, { opacity: 0, visibility: "hidden" });
   if (bunnyFace) gsap.set(bunnyFace, { opacity: 0, visibility: "hidden" });
   if (hayWrap) gsap.set(hayWrap, { opacity: 0, visibility: "hidden", y: 12, rotation: -4 });
+  if (bookshelfWrap) gsap.set(bookshelfWrap, { opacity: 0, visibility: "hidden", y: 10, scale: 0.96 });
 
+  if (namingCallouts) {
+    gsap.set(namingCallouts, { opacity: 0, visibility: "hidden" });
+    gsap.set(namingCallouts.querySelectorAll(".callout"), {
+      opacity: 0,
+      y: 8,
+      scale: 0.98
+    });
+  }
+
+  updateNamingCallouts(0);
   setCaption(1, { animate: false });
 
   const { fitScale, startScale, startTranslateY } = getScales();
@@ -338,6 +463,8 @@ function setup() {
           gsap.to(captionArea, { opacity: 0, y: 6, duration: 0.2, overwrite: true });
           showIntroBunny();
           hideHay();
+          hideNamingCallouts();
+          hideBookshelf();
           return;
         }
 
@@ -356,6 +483,18 @@ function setup() {
           showHay();
         } else {
           hideHay();
+        }
+
+        if (idx === 3) {
+          showNamingCallouts();
+        } else {
+          hideNamingCallouts();
+        }
+
+        if (idx === 4) {
+          showBookshelf();
+        } else {
+          hideBookshelf();
         }
       },
       onEnterBack: () => {
@@ -363,6 +502,8 @@ function setup() {
           gsap.to(captionArea, { opacity: 0, y: 6, duration: 0.2, overwrite: true });
           showIntroBunny();
           hideHay();
+          hideNamingCallouts();
+          hideBookshelf();
           return;
         }
 
@@ -381,6 +522,18 @@ function setup() {
           showHay();
         } else {
           hideHay();
+        }
+
+        if (idx === 3) {
+          showNamingCallouts();
+        } else {
+          hideNamingCallouts();
+        }
+
+        if (idx === 4) {
+          showBookshelf();
+        } else {
+          hideBookshelf();
         }
       }
     });
@@ -417,6 +570,19 @@ function setup() {
         start: "top bottom",
         end: "bottom top",
         scrub: true
+      }
+    });
+  }
+
+  /* ─── Naming Things progression ───────────────────────────────────── */
+  if (namingThingsStep) {
+    ScrollTrigger.create({
+      trigger: namingThingsStep,
+      start: "top bottom",
+      end: "bottom top",
+      scrub: true,
+      onUpdate: (self) => {
+        updateNamingCallouts(self.progress);
       }
     });
   }

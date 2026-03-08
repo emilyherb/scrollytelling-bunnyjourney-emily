@@ -22,7 +22,6 @@
 
 <body>
   <main class="stage">
-    <!-- STICKY STORY (bunny always centered) -->
     <div class="sticky-scene" id="stickyScene">
       <div class="frame">
         <div class="bg" aria-hidden="true">
@@ -30,13 +29,13 @@
           <div class="dust"></div>
         </div>
 
-        <!-- Code layer (behind bunny) -->
+        <!-- Code layer -->
         <div class="codeLayer" id="codeLayer" aria-hidden="true">
           <pre class="codeBlock" id="codeBlock"></pre>
         </div>
 
         <div class="scene">
-          <!-- Title text sits between the ears in screen-space -->
+          <!-- Title text -->
           <div class="title-text" id="titleText" aria-hidden="true">
             <h1 id="titleH1">The<br>Bunny's Journey.</h1>
             <p id="titleSub">scroll to begin</p>
@@ -46,6 +45,12 @@
           <div class="bunnyWrap" id="bunnyWrap">
             <!-- HAY: only appears during FIRST CONTACT -->
             <div class="hayWrap" id="hayWrap" aria-hidden="true">
+              <div class="haySingleWrap">
+                <svg class="haySingle" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="10" y1="25" x2="190" y2="23" stroke="#7BA056" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+
               <svg class="hay" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
                 <g>
                   <line x1="50" y1="130" x2="140" y2="125" stroke="#4A6B32" stroke-width="2.5" stroke-linecap="round"/>
@@ -108,7 +113,352 @@
               </svg>
             </div>
 
-            <!-- ORIGINAL BUNNY: intro + arrival -->
+            <!-- BOOKSHELF: only appears during THE SWITCH -->
+            <div class="bookshelfWrap" id="bookshelfWrap" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 750" width="500" height="750">
+                <defs>
+                  <linearGradient id="woodGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#c8a068"/>
+                    <stop offset="40%" stop-color="#d4ae78"/>
+                    <stop offset="100%" stop-color="#a07848"/>
+                  </linearGradient>
+                  <linearGradient id="shelfGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#d8b478"/>
+                    <stop offset="30%" stop-color="#c09858"/>
+                    <stop offset="100%" stop-color="#8c6a30"/>
+                  </linearGradient>
+                  <linearGradient id="topGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#e0bc80"/>
+                    <stop offset="100%" stop-color="#b08840"/>
+                  </linearGradient>
+                  <linearGradient id="backPanel" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#c09060"/>
+                    <stop offset="50%" stop-color="#d4a870"/>
+                    <stop offset="100%" stop-color="#c09060"/>
+                  </linearGradient>
+                  <linearGradient id="potRed" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#e07a5f"/>
+                    <stop offset="100%" stop-color="#b85c42"/>
+                  </linearGradient>
+                  <linearGradient id="potGreen" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#6a8f7a"/>
+                    <stop offset="100%" stop-color="#4a6b58"/>
+                  </linearGradient>
+                  <linearGradient id="potBrown" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#a06040"/>
+                    <stop offset="100%" stop-color="#7a4428"/>
+                  </linearGradient>
+                  <filter id="shad">
+                    <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#00000025"/>
+                  </filter>
+                </defs>
+
+                <rect x="32" y="12" width="436" height="726" fill="url(#backPanel)" rx="1"/>
+                <line x1="100" y1="12" x2="100" y2="738" stroke="#b08050" stroke-width="1" opacity="0.4"/>
+                <line x1="180" y1="12" x2="180" y2="738" stroke="#b08050" stroke-width="1" opacity="0.3"/>
+                <line x1="260" y1="12" x2="260" y2="738" stroke="#c09060" stroke-width="1" opacity="0.3"/>
+                <line x1="340" y1="12" x2="340" y2="738" stroke="#b08050" stroke-width="1" opacity="0.3"/>
+                <line x1="420" y1="12" x2="420" y2="738" stroke="#b08050" stroke-width="1" opacity="0.3"/>
+
+                <rect x="8" y="8" width="28" height="734" fill="url(#woodGrad)" rx="3" filter="url(#shad)"/>
+                <rect x="8" y="8" width="4" height="734" fill="#e0c080" opacity="0.4" rx="2"/>
+
+                <rect x="464" y="8" width="28" height="734" fill="url(#woodGrad)" rx="3" filter="url(#shad)"/>
+                <rect x="488" y="8" width="4" height="734" fill="#7a5020" opacity="0.4" rx="2"/>
+
+                <rect x="4" y="4" width="492" height="18" fill="url(#topGrad)" rx="3" filter="url(#shad)"/>
+                <rect x="4" y="18" width="492" height="6" fill="#9a7030"/>
+
+                <rect x="4" y="728" width="492" height="18" fill="url(#topGrad)" rx="3"/>
+                <rect x="4" y="728" width="492" height="6" fill="#9a7030"/>
+
+                <rect x="30" y="168" width="440" height="14" fill="url(#shelfGrad)" rx="2" filter="url(#shad)"/>
+                <rect x="30" y="168" width="440" height="4" fill="#e0c080" opacity="0.4"/>
+
+                <rect x="30" y="338" width="440" height="14" fill="url(#shelfGrad)" rx="2" filter="url(#shad)"/>
+                <rect x="30" y="338" width="440" height="4" fill="#e0c080" opacity="0.4"/>
+
+                <rect x="30" y="508" width="440" height="14" fill="url(#shelfGrad)" rx="2" filter="url(#shad)"/>
+                <rect x="30" y="508" width="440" height="4" fill="#e0c080" opacity="0.4"/>
+
+                <rect x="30" y="678" width="440" height="14" fill="url(#shelfGrad)" rx="2" filter="url(#shad)"/>
+                <rect x="30" y="678" width="440" height="4" fill="#e0c080" opacity="0.4"/>
+
+                <!-- TOP BAY -->
+                <rect x="46" y="42" width="28" height="126" fill="#2a5a38" rx="2"/>
+                <rect x="46" y="42" width="5" height="126" fill="#1a3a24" opacity="0.8"/>
+                <rect x="51" y="58" width="18" height="2" fill="#ffffff45"/>
+                <rect x="51" y="63" width="13" height="2" fill="#ffffff35"/>
+
+                <rect x="76" y="62" width="22" height="106" fill="#d4907a" rx="2"/>
+                <rect x="76" y="62" width="4" height="106" fill="#b07060"/>
+
+                <rect x="100" y="48" width="26" height="120" fill="#1c3060" rx="2"/>
+                <rect x="100" y="48" width="5" height="120" fill="#0e1e40"/>
+                <rect x="105" y="62" width="16" height="2" fill="#ffffff45"/>
+                <rect x="105" y="67" width="11" height="2" fill="#ffffff35"/>
+
+                <rect x="128" y="55" width="24" height="113" fill="#c8902a" rx="2"/>
+                <rect x="128" y="55" width="4" height="113" fill="#9a6e1a"/>
+
+                <ellipse cx="167" cy="162" rx="10" ry="5" fill="#c8a868"/>
+                <ellipse cx="167" cy="124" rx="12" ry="38" fill="#d4b478"/>
+                <circle cx="162" cy="114" r="4" fill="#ffffff80"/>
+                <circle cx="172" cy="114" r="4" fill="#ffffff80"/>
+                <circle cx="162" cy="114" r="2.5" fill="#3a2810"/>
+                <circle cx="172" cy="114" r="2.5" fill="#3a2810"/>
+                <polygon points="167,118 164,122 170,122" fill="#c8902a"/>
+
+                <rect x="184" y="52" width="22" height="116" fill="#2a7c7c" rx="2"/>
+                <rect x="184" y="52" width="4" height="116" fill="#1a5858"/>
+
+                <rect x="208" y="60" width="24" height="108" fill="#7c2a3a" rx="2"/>
+                <rect x="208" y="60" width="5" height="108" fill="#5a1e28"/>
+                <rect x="213" y="74" width="14" height="2" fill="#ffffff40"/>
+
+                <rect x="234" y="66" width="18" height="102" fill="#7a9a68" rx="2"/>
+                <rect x="234" y="66" width="3" height="102" fill="#5a7a48"/>
+
+                <rect x="254" y="44" width="26" height="124" fill="#e07860" rx="2"/>
+                <rect x="254" y="44" width="5" height="124" fill="#b85a44"/>
+                <rect x="259" y="58" width="16" height="2" fill="#ffffff40"/>
+
+                <ellipse cx="312" cy="164" rx="18" ry="5" fill="#b05a3a"/>
+                <path d="M294 164 Q293 145 298 138 Q305 132 312 132 Q319 132 326 138 Q331 145 330 164 Z" fill="#c86a48"/>
+                <ellipse cx="312" cy="132" rx="16" ry="4" fill="#4a2a14"/>
+                <ellipse cx="312" cy="122" rx="7" ry="10" fill="#7aba7a"/>
+                <ellipse cx="322" cy="127" rx="6" ry="9" fill="#6aaa6a" transform="rotate(40 322 127)"/>
+                <ellipse cx="325" cy="136" rx="6" ry="8" fill="#7aba7a" transform="rotate(70 325 136)"/>
+                <ellipse cx="302" cy="127" rx="6" ry="9" fill="#6aaa6a" transform="rotate(-40 302 127)"/>
+                <ellipse cx="299" cy="136" rx="6" ry="8" fill="#7aba7a" transform="rotate(-70 299 136)"/>
+                <ellipse cx="312" cy="125" rx="4" ry="6" fill="#9ada9a"/>
+
+                <rect x="338" y="56" width="22" height="112" fill="#5870a0" rx="2"/>
+                <rect x="338" y="56" width="4" height="112" fill="#3a5080"/>
+
+                <rect x="362" y="65" width="20" height="103" fill="#f0e090" rx="2"/>
+                <rect x="362" y="65" width="4" height="103" fill="#d0c060"/>
+
+                <rect x="384" y="48" width="26" height="120" fill="#4a2a10" rx="2"/>
+                <rect x="384" y="48" width="5" height="120" fill="#2e1808"/>
+                <rect x="389" y="62" width="16" height="2" fill="#d4a84050"/>
+
+                <rect x="412" y="60" width="22" height="108" fill="#a890c8" rx="2"/>
+                <rect x="412" y="60" width="4" height="108" fill="#8870a8"/>
+
+                <rect x="436" y="42" width="26" height="126" fill="#b84a28" rx="2"/>
+                <rect x="436" y="42" width="5" height="126" fill="#8a3018"/>
+                <rect x="441" y="56" width="16" height="2" fill="#ffffff40"/>
+
+                <!-- SECOND BAY -->
+                <rect x="46" y="198" width="34" height="20" fill="url(#potGreen)" rx="3"/>
+                <rect x="50" y="190" width="26" height="11" fill="#3a5848" rx="2"/>
+                <path d="M63 190 Q52 218 44 248 Q38 270 44 288" stroke="#4a8840" stroke-width="2.5" fill="none"/>
+                <path d="M63 190 Q72 215 80 242 Q86 262 78 280" stroke="#4a8840" stroke-width="2.5" fill="none"/>
+                <path d="M63 190 Q60 222 58 250 Q56 272 62 290" stroke="#3a7830" stroke-width="2" fill="none"/>
+                <ellipse cx="46" cy="255" rx="13" ry="9" fill="#5aaa5a" transform="rotate(-30 46 255)"/>
+                <ellipse cx="78" cy="248" rx="12" ry="8" fill="#4a9a4a" transform="rotate(25 78 248)"/>
+                <ellipse cx="42" cy="272" rx="11" ry="8" fill="#6aba6a" transform="rotate(-45 42 272)"/>
+                <ellipse cx="80" cy="265" rx="11" ry="7" fill="#5aaa5a" transform="rotate(40 80 265)"/>
+                <ellipse cx="60" cy="280" rx="10" ry="7" fill="#4a9a4a" transform="rotate(5 60 280)"/>
+
+                <rect x="96" y="196" width="24" height="142" fill="#e07828" rx="2"/>
+                <rect x="96" y="196" width="5" height="142" fill="#b85c18"/>
+                <rect x="101" y="212" width="14" height="2" fill="#ffffff40"/>
+
+                <rect x="122" y="205" width="22" height="133" fill="#5a2878" rx="2"/>
+                <rect x="122" y="205" width="4" height="133" fill="#3e1858"/>
+
+                <rect x="146" y="195" width="26" height="143" fill="#6a7830" rx="2"/>
+                <rect x="146" y="195" width="5" height="143" fill="#4a5820"/>
+                <rect x="151" y="210" width="16" height="2" fill="#ffffff40"/>
+
+                <rect x="174" y="210" width="20" height="128" fill="#f0e8d8" rx="2"/>
+                <rect x="174" y="210" width="4" height="128" fill="#d8c8a0"/>
+
+                <rect x="202" y="295" width="56" height="13" fill="#2a5880" rx="1"/>
+                <rect x="205" y="282" width="50" height="13" fill="#d4902a" rx="1"/>
+                <rect x="208" y="270" width="44" height="13" fill="#8a2020" rx="1"/>
+                <path d="M230 270 Q222 255 216 244" stroke="#7ac870" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <path d="M230 270 Q230 254 231 243" stroke="#6ab860" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <path d="M230 270 Q238 255 244 244" stroke="#7ac870" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <path d="M230 270 Q224 260 218 255" stroke="#5aa850" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M230 270 Q236 261 242 256" stroke="#5aa850" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+                <rect x="266" y="198" width="24" height="140" fill="#4878a8" rx="2"/>
+                <rect x="266" y="198" width="5" height="140" fill="#305888"/>
+                <rect x="271" y="213" width="14" height="2" fill="#ffffff40"/>
+
+                <rect x="292" y="208" width="22" height="130" fill="#e8907a" rx="2"/>
+                <rect x="292" y="208" width="4" height="130" fill="#c07060"/>
+
+                <rect x="316" y="196" width="26" height="142" fill="#1e5030" rx="2"/>
+                <rect x="316" y="196" width="5" height="142" fill="#123820"/>
+                <rect x="321" y="212" width="16" height="2" fill="#ffffff40"/>
+
+                <ellipse cx="368" cy="334" rx="18" ry="5" fill="#b89060"/>
+                <path d="M350 334 Q348 308 353 295 Q360 285 368 283 Q376 285 383 295 Q388 308 386 334 Z" fill="#c8a070"/>
+                <ellipse cx="368" cy="283" rx="16" ry="4" fill="#9a7040"/>
+                <line x1="368" y1="283" x2="358" y2="255" stroke="#8a6830" stroke-width="1.5"/>
+                <line x1="368" y1="283" x2="366" y2="248" stroke="#9a7838" stroke-width="1.5"/>
+                <line x1="368" y1="283" x2="376" y2="252" stroke="#8a6830" stroke-width="1.5"/>
+                <line x1="368" y1="283" x2="360" y2="262" stroke="#9a7838" stroke-width="1.5"/>
+                <line x1="368" y1="283" x2="378" y2="260" stroke="#8a6830" stroke-width="1.5"/>
+                <circle cx="358" cy="253" r="6" fill="#d87868"/>
+                <circle cx="366" cy="246" r="5" fill="#e09070"/>
+                <circle cx="376" cy="250" r="6" fill="#c86858"/>
+                <circle cx="360" cy="260" r="4" fill="#d48060"/>
+                <circle cx="378" cy="258" r="4" fill="#e09878"/>
+                <ellipse cx="356" cy="270" rx="9" ry="5" fill="#6a8840" transform="rotate(-25 356 270)"/>
+                <ellipse cx="380" cy="268" rx="8" ry="4" fill="#7a9850" transform="rotate(20 380 268)"/>
+
+                <rect x="396" y="200" width="24" height="138" fill="#2840a0" rx="2"/>
+                <rect x="396" y="200" width="5" height="138" fill="#1a2870"/>
+                <rect x="401" y="215" width="14" height="2" fill="#ffffff45"/>
+
+                <rect x="422" y="210" width="18" height="128" fill="#c83828" rx="2"/>
+                <rect x="422" y="210" width="3" height="128" fill="#a02018"/>
+
+                <rect x="442" y="198" width="24" height="140" fill="#c8a870" rx="2"/>
+                <rect x="442" y="198" width="5" height="140" fill="#a88850"/>
+
+                <!-- THIRD BAY -->
+                <rect x="44" y="480" width="40" height="24" fill="url(#potBrown)" rx="3"/>
+                <rect x="49" y="470" width="30" height="14" fill="#6a4020" rx="2"/>
+                <path d="M64 470 Q56 440 50 420 Q44 402 50 386" stroke="#4a7838" stroke-width="3.5" fill="none"/>
+                <path d="M64 470 Q72 438 78 416 Q84 398 78 380" stroke="#4a7838" stroke-width="3" fill="none"/>
+                <path d="M64 470 Q62 445 62 422 Q62 406 66 390" stroke="#3a6828" stroke-width="2.5" fill="none"/>
+                <path d="M50 386 Q32 370 28 354 Q30 344 40 343 Q52 343 54 356 Q54 368 50 376" fill="#4a9050"/>
+                <path d="M42 374 Q36 362 37 352" stroke="#3a7040" stroke-width="1.5" fill="none"/>
+                <path d="M78 380 Q96 363 100 347 Q98 337 88 337 Q76 338 76 350 Q76 364 78 372" fill="#5aa058"/>
+                <path d="M86 368 Q94 356 92 346" stroke="#3a7040" stroke-width="1.5" fill="none"/>
+                <path d="M64 422 Q48 412 44 400 Q46 392 54 392 Q62 393 62 402" fill="#4a8848"/>
+                <path d="M66 418 Q80 406 84 394 Q82 386 74 386 Q66 388 66 398" fill="#5a9858"/>
+
+                <rect x="102" y="356" width="26" height="152" fill="#3c2878" rx="2"/>
+                <rect x="102" y="356" width="5" height="152" fill="#281858"/>
+                <rect x="107" y="372" width="16" height="2" fill="#ffffff45"/>
+                <rect x="107" y="377" width="12" height="2" fill="#ffffff35"/>
+
+                <rect x="130" y="368" width="22" height="140" fill="#9ab898" rx="2"/>
+                <rect x="130" y="368" width="4" height="140" fill="#7a9878"/>
+
+                <rect x="154" y="358" width="28" height="150" fill="#a83828" rx="2"/>
+                <rect x="154" y="358" width="6" height="150" fill="#7a2018"/>
+                <rect x="160" y="374" width="16" height="2" fill="#ffffff40"/>
+
+                <rect x="184" y="365" width="24" height="143" fill="#e0c030" rx="2"/>
+                <rect x="184" y="365" width="5" height="143" fill="#c0a020"/>
+
+                <ellipse cx="232" cy="504" rx="18" ry="5" fill="url(#potRed)"/>
+                <path d="M214 504 Q213 484 218 476 Q224 469 232 468 Q240 469 246 476 Q251 484 250 504 Z" fill="#e08868"/>
+                <ellipse cx="232" cy="468" rx="17" ry="4" fill="#4a2a14"/>
+                <rect x="226" y="432" width="12" height="38" fill="#5a9e58" rx="6"/>
+                <rect x="215" y="440" width="12" height="22" fill="#5a9e58" rx="5"/>
+                <rect x="209" y="437" width="8" height="14" fill="#5a9e58" rx="4"/>
+                <rect x="247" y="443" width="12" height="20" fill="#5a9e58" rx="5"/>
+                <rect x="257" y="440" width="8" height="12" fill="#5a9e58" rx="4"/>
+                <line x1="232" y1="434" x2="232" y2="430" stroke="#c8a040" stroke-width="1"/>
+                <line x1="228" y1="436" x2="225" y2="432" stroke="#c8a040" stroke-width="1"/>
+                <line x1="236" y1="436" x2="239" y2="432" stroke="#c8a040" stroke-width="1"/>
+
+                <rect x="268" y="358" width="24" height="150" fill="#186060" rx="2"/>
+                <rect x="268" y="358" width="5" height="150" fill="#0c4040"/>
+
+                <rect x="294" y="367" width="22" height="141" fill="#b07888" rx="2"/>
+                <rect x="294" y="367" width="4" height="141" fill="#906070"/>
+
+                <rect x="318" y="355" width="28" height="153" fill="#3a3a3a" rx="2"/>
+                <rect x="318" y="355" width="5" height="153" fill="#252525"/>
+                <rect x="323" y="370" width="18" height="2" fill="#ffffff35"/>
+
+                <circle cx="376" cy="476" r="24" fill="#7ab8d4" opacity="0.85"/>
+                <ellipse cx="376" cy="476" rx="24" ry="6" fill="none" stroke="#5a98b4" stroke-width="2" opacity="0.7"/>
+                <path d="M352 476 Q362 462 376 458 Q390 462 400 476" stroke="#5a98b4" stroke-width="1.5" fill="none" opacity="0.6"/>
+                <path d="M352 476 Q362 490 376 494 Q390 490 400 476" stroke="#5a98b4" stroke-width="1.5" fill="none" opacity="0.6"/>
+                <line x1="376" y1="452" x2="376" y2="500" stroke="#5a98b4" stroke-width="1.5" opacity="0.5"/>
+                <rect x="369" y="499" width="14" height="5" fill="#9a9888" rx="1"/>
+                <rect x="366" y="503" width="20" height="4" fill="#8a8878" rx="1"/>
+
+                <rect x="408" y="362" width="24" height="146" fill="#2a7858" rx="2"/>
+                <rect x="408" y="362" width="5" height="146" fill="#1a5840"/>
+
+                <rect x="434" y="370" width="20" height="138" fill="#e8b0a0" rx="2"/>
+                <rect x="434" y="370" width="4" height="138" fill="#c89080"/>
+
+                <rect x="456" y="355" width="10" height="153" fill="#181838" rx="2"/>
+                <rect x="456" y="355" width="3" height="153" fill="#100c28"/>
+
+                <!-- FOURTH BAY -->
+                <rect x="44" y="650" width="42" height="25" fill="url(#potGreen)" rx="3"/>
+                <rect x="50" y="641" width="30" height="12" fill="#3a5848" rx="2"/>
+                <path d="M58 641 Q52 605 50 570 Q48 540 54 522" stroke="#3a6030" stroke-width="10" fill="none" stroke-linecap="round"/>
+                <path d="M65 641 Q60 608 60 575 Q60 546 65 528" stroke="#4a7040" stroke-width="9" fill="none" stroke-linecap="round"/>
+                <path d="M72 641 Q70 610 72 578 Q74 548 70 530" stroke="#3a6030" stroke-width="9" fill="none" stroke-linecap="round"/>
+                <path d="M79 641 Q78 612 80 580 Q82 550 76 534" stroke="#4a7040" stroke-width="8" fill="none" stroke-linecap="round"/>
+                <path d="M55 598 Q50 578 52 558" stroke="#8ac870" stroke-width="1.5" fill="none" opacity="0.45"/>
+                <path d="M68 595 Q66 575 68 555" stroke="#8ac870" stroke-width="1.5" fill="none" opacity="0.45"/>
+
+                <rect x="104" y="525" width="28" height="153" fill="#1848a0" rx="2"/>
+                <rect x="104" y="525" width="5" height="153" fill="#0c3078"/>
+                <rect x="109" y="542" width="18" height="2" fill="#ffffff50"/>
+                <rect x="109" y="547" width="13" height="2" fill="#ffffff40"/>
+
+                <rect x="134" y="538" width="20" height="140" fill="#e87830" rx="2"/>
+                <rect x="134" y="538" width="4" height="140" fill="#c05818"/>
+
+                <rect x="156" y="525" width="26" height="153" fill="#2a5a30" rx="2"/>
+                <rect x="156" y="525" width="5" height="153" fill="#1a3a1e"/>
+                <rect x="161" y="540" width="16" height="2" fill="#ffffff40"/>
+
+                <rect x="190" y="560" width="44" height="118" fill="#b89860" rx="4"/>
+                <rect x="194" y="564" width="36" height="110" fill="#c8a870" rx="3"/>
+                <rect x="195" y="566" width="5" height="107" fill="#e07860" rx="1"/>
+                <rect x="201" y="568" width="4" height="105" fill="#2840a0" rx="1"/>
+                <rect x="206" y="567" width="5" height="106" fill="#5a9a58" rx="1"/>
+                <rect x="212" y="569" width="4" height="104" fill="#c8902a" rx="1"/>
+                <rect x="217" y="567" width="5" height="106" fill="#7c2a7c" rx="1"/>
+                <rect x="223" y="568" width="4" height="105" fill="#388888" rx="1"/>
+
+                <rect x="242" y="530" width="24" height="148" fill="#6a2060" rx="2"/>
+                <rect x="242" y="530" width="5" height="148" fill="#4e1848"/>
+                <rect x="247" y="546" width="14" height="2" fill="#ffffff40"/>
+
+                <rect x="268" y="540" width="20" height="138" fill="#88c8c0" rx="2"/>
+                <rect x="268" y="540" width="4" height="138" fill="#60a8a0"/>
+
+                <rect x="290" y="525" width="30" height="153" fill="#901c1c" rx="2"/>
+                <rect x="290" y="525" width="6" height="153" fill="#6a1010"/>
+                <rect x="296" y="540" width="18" height="2" fill="#ffffff45"/>
+
+                <rect x="332" y="628" width="28" height="18" fill="url(#potRed)" rx="3"/>
+                <rect x="336" y="620" width="20" height="11" fill="#b05030" rx="2"/>
+                <path d="M346 620 Q336 605 330 592 Q325 580 330 570" stroke="#5a8840" stroke-width="2" fill="none"/>
+                <path d="M346 620 Q355 603 360 590 Q364 578 356 568" stroke="#4a7830" stroke-width="2" fill="none"/>
+                <path d="M346 620 Q344 606 342 592 Q340 580 346 570" stroke="#4a8038" stroke-width="1.8" fill="none"/>
+                <ellipse cx="330" cy="582" rx="10" ry="7" fill="#5aaa4a" transform="rotate(-20 330 582)"/>
+                <ellipse cx="358" cy="578" rx="10" ry="7" fill="#4a9a3a" transform="rotate(25 358 578)"/>
+                <ellipse cx="344" cy="572" rx="9" ry="6" fill="#6aba5a" transform="rotate(5 344 572)"/>
+                <ellipse cx="332" cy="570" rx="8" ry="6" fill="#5aaa4a" transform="rotate(-35 332 570)"/>
+
+                <rect x="368" y="530" width="22" height="148" fill="#5878a0" rx="2"/>
+                <rect x="368" y="530" width="4" height="148" fill="#385880"/>
+
+                <rect x="392" y="542" width="24" height="136" fill="#a8a030" rx="2"/>
+                <rect x="392" y="542" width="5" height="136" fill="#888018"/>
+
+                <rect x="418" y="528" width="26" height="150" fill="#c86840" rx="2"/>
+                <rect x="418" y="528" width="5" height="150" fill="#a04828"/>
+                <rect x="423" y="543" width="16" height="2" fill="#ffffff40"/>
+
+                <rect x="446" y="540" width="16" height="138" fill="#282828" rx="2"/>
+                <rect x="446" y="540" width="3" height="138" fill="#181818"/>
+
+                <rect x="464" y="526" width="4" height="152" fill="#e8dcc8" rx="1"/>
+              </svg>
+            </div>
+
+            <!-- Intro bunny -->
             <svg
               id="bunnyIntro"
               class="bunny bunny--active"
@@ -146,7 +496,7 @@
               </g>
             </svg>
 
-            <!-- NEW BUNNY: first contact and onward -->
+            <!-- Side bunny -->
             <svg
               class="bunny bunny--story"
               id="bunnyStory"
@@ -205,80 +555,71 @@
               </g>
             </svg>
 
-          <!--NAMING THINGS BUNNY -->
+            <!-- Face bunny -->
             <svg
-  class="bunny bunny--face"
-  id="bunnyFace"
-  viewBox="0 0 400 400"
-  xmlns="http://www.w3.org/2000/svg"
-  aria-hidden="true"
->
-  <!-- Left ear -->
-  <g class="ear-left">
-    <ellipse
-      cx="140" cy="120" rx="35" ry="80"
-      fill="#8B6F47"
-      transform="rotate(-15 140 120)"
-    />
-    <ellipse
-      cx="140" cy="120" rx="22" ry="65"
-      fill="#A0826D"
-      transform="rotate(-15 140 120)"
-    />
-  </g>
+              class="bunny bunny--face"
+              id="bunnyFace"
+              viewBox="0 0 400 400"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <g class="ear-left">
+                <ellipse cx="140" cy="120" rx="35" ry="80" fill="#8B6F47" transform="rotate(-15 140 120)" />
+                <ellipse cx="140" cy="120" rx="22" ry="65" fill="#A0826D" transform="rotate(-15 140 120)" />
+              </g>
 
-  <!-- Right ear -->
-  <g class="ear-right">
-    <ellipse
-      cx="260" cy="120" rx="35" ry="80"
-      fill="#8B6F47"
-      transform="rotate(15 260 120)"
-    />
-    <ellipse
-      cx="260" cy="120" rx="22" ry="65"
-      fill="#A0826D"
-      transform="rotate(15 260 120)"
-    />
-  </g>
+              <g class="ear-right">
+                <ellipse cx="260" cy="120" rx="35" ry="80" fill="#8B6F47" transform="rotate(15 260 120)" />
+                <ellipse cx="260" cy="120" rx="22" ry="65" fill="#A0826D" transform="rotate(15 260 120)" />
+              </g>
 
-  <!-- Head -->
-  <ellipse cx="200" cy="220" rx="85" ry="95" fill="#8B6F47"/>
+              <ellipse cx="200" cy="220" rx="85" ry="95" fill="#8B6F47"/>
 
-  <!-- Cheeks -->
-  <ellipse cx="150" cy="240" rx="30" ry="35" fill="#A0826D" opacity="0.7"/>
-  <ellipse cx="250" cy="240" rx="30" ry="35" fill="#A0826D" opacity="0.7"/>
+              <ellipse cx="150" cy="240" rx="30" ry="35" fill="#A0826D" opacity="0.7"/>
+              <ellipse cx="250" cy="240" rx="30" ry="35" fill="#A0826D" opacity="0.7"/>
 
-  <!-- Left eye -->
-  <circle cx="160" cy="210" r="12" fill="#3B2614"/>
-  <circle cx="163" cy="207" r="4" fill="#FFFFFF"/>
+              <circle cx="160" cy="210" r="12" fill="#3B2614"/>
+              <circle cx="163" cy="207" r="4" fill="#FFFFFF"/>
 
-  <!-- Right eye -->
-  <circle cx="240" cy="210" r="12" fill="#3B2614"/>
-  <circle cx="243" cy="207" r="4" fill="#FFFFFF"/>
+              <circle cx="240" cy="210" r="12" fill="#3B2614"/>
+              <circle cx="243" cy="207" r="4" fill="#FFFFFF"/>
 
-  <!-- Nose -->
-  <ellipse cx="200" cy="250" rx="10" ry="8" fill="#6B5544"/>
+              <ellipse cx="200" cy="250" rx="10" ry="8" fill="#6B5544"/>
 
-  <!-- Mouth -->
-  <path d="M 200 260 L 200 270" stroke="#6B5544" stroke-width="2" stroke-linecap="round"/>
-  <path d="M 200 270 Q 185 280 175 275" stroke="#6B5544" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <path d="M 200 270 Q 215 280 225 275" stroke="#6B5544" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 200 260 L 200 270" stroke="#6B5544" stroke-width="2" stroke-linecap="round"/>
+              <path d="M 200 270 Q 185 280 175 275" stroke="#6B5544" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 200 270 Q 215 280 225 275" stroke="#6B5544" stroke-width="2" fill="none" stroke-linecap="round"/>
 
-  <!-- Left whiskers -->
-  <line x1="150" y1="245" x2="90" y2="235" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
-  <line x1="150" y1="250" x2="85" y2="250" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
-  <line x1="150" y1="255" x2="90" y2="265" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
+              <line x1="150" y1="245" x2="90" y2="235" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
+              <line x1="150" y1="250" x2="85" y2="250" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
+              <line x1="150" y1="255" x2="90" y2="265" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
 
-  <!-- Right whiskers -->
-  <line x1="250" y1="245" x2="310" y2="235" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
-  <line x1="250" y1="250" x2="315" y2="250" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
-  <line x1="250" y1="255" x2="310" y2="265" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
-</svg>
+              <line x1="250" y1="245" x2="310" y2="235" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
+              <line x1="250" y1="250" x2="315" y2="250" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
+              <line x1="250" y1="255" x2="310" y2="265" stroke="#6B5544" stroke-width="1.5" opacity="0.6"/>
+            </svg>
+          </div>
 
+          <!-- Naming callouts -->
+          <div class="namingCallouts" id="namingCallouts" aria-hidden="true">
+            <div class="callout callout--1">
+              <span class="calloutValue"><span class="calloutPrefix">let</span> energy = <span id="calloutEnergy">20</span>;</span>
+            </div>
+
+            <div class="callout callout--2">
+              <span class="calloutValue"><span class="calloutPrefix">let</span> hunger = <span id="calloutHunger">75</span>;</span>
+            </div>
+
+            <div class="callout callout--3">
+              <span class="calloutValue"><span class="calloutPrefix">let</span> mood = <span id="calloutMood">"unsure"</span>;</span>
+            </div>
+
+            <div class="callout callout--4">
+              <span class="calloutValue"><span class="calloutPrefix">let</span> safe = <span id="calloutSafe">false</span>;</span>
+            </div>
           </div>
         </div>
 
-        <!-- Caption Area -->
         <div class="captionArea" id="captionArea" aria-live="polite">
           <div class="captionKicker" id="captionKicker">section 2</div>
           <div class="caption" id="captionText"></div>
@@ -287,10 +628,8 @@
       </div>
     </div>
 
-    <!-- SCROLL TRACK -->
     <div class="track" id="track">
       <section class="step step--intro" data-step="0" aria-label="Intro"></section>
-
       <section class="step" data-step="1" aria-label="Section 2"></section>
       <section class="step" data-step="2" aria-label="Section 3"></section>
       <section class="step" data-step="3" aria-label="Section 4"></section>
