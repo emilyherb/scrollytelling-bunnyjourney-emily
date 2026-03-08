@@ -13,28 +13,49 @@ const captionSmall = document.getElementById("captionSmall");
 const codeLayer = document.getElementById("codeLayer");
 const codeBlock = document.getElementById("codeBlock");
 
+const bunnyIntro = document.getElementById("bunnyIntro");
+const bunnyStory = document.getElementById("bunnyStory");
+const bunnyFace = document.getElementById("bunnyFace");
+const hayWrap = document.getElementById("hayWrap");
+
 const introStep = document.querySelector(".step--intro");
 const steps = Array.from(document.querySelectorAll(".step[data-step]"));
-const step2 = document.querySelector('.step[data-step="1"]'); // section 2
+const step2 = document.querySelector('.step[data-step="1"]'); // The Arrival
 
-/* ─── Story Content (7 sections total: 0 intro, 1..6 story) ───────────── */
+/* ─── Story Content ──────────────────────────────────────────────────── */
 const STORY = [
   { kicker: "section 1", text: "", small: "" },
 
   {
-    kicker: "section 2",
+    kicker: "THE ARRIVAL",
     text:
-      "I was placed somewhere new. I didn't move at first. I waited to see what the world would do. Everything smelled different. I listened.",
+      "I was placed somewhere new. I didn't move at first. I waited to see what the world would do.",
+    small: "Everything smelled different. I listened."
+  },
+  {
+    kicker: "FIRST CONTACT",
+    text: "I pushed something small. A piece of hay. It moved. The world answered me.",
     small: ""
   },
-  { kicker: "section 3", text: "Then something shifted. A sound. A soft step. A pause that meant I was being noticed.", small: "" },
-  { kicker: "section 4", text: "I learned the edges of the room. The safe corners. The places where light warmed the floor.", small: "" },
-  { kicker: "section 5", text: "When I finally moved, it was quiet. Like a secret I was telling myself.", small: "" },
-  { kicker: "section 6", text: "Some days were still. Some days were brave. Either way, I stayed.", small: "" },
-  { kicker: "section 7", text: "Eventually, the newness faded. And what was left… felt like mine.", small: "" }
+  {
+    kicker: "NAMING THINGS",
+    text: "I learned the edges of the room. The safe corners. The places where light warmed the floor.",
+    small: ""
+  },
+  {
+    kicker: "THE SWITCH",
+    text: "When I finally moved, it was quiet. Like a secret I was telling myself.",
+    small: ""
+  },
+  {
+    kicker: "THE MEMORY",
+    text: "Some days were still. Some days were brave. Either way, I stayed.",
+    small: ""
+  },
+  { kicker: "THE END", text: "", small: "" }
 ];
 
-/* ─── Code content for the “JavaScript river” ─────────────────────────── */
+/* ─── Code content ───────────────────────────────────────────────────── */
 function makeCodeLines() {
   const snippets = [
     `// section 2: learning the world by reading it`,
@@ -63,7 +84,6 @@ function makeCodeLines() {
     ``,
     `// events feel like footsteps`,
     `window.addEventListener("scroll", () => {`,
-    `  // not every movement means danger`,
     `  bunny.brave = bunny.curiosity > 3;`,
     `});`,
     ``,
@@ -96,16 +116,11 @@ function makeCodeLines() {
 function initCodeLayer() {
   if (!codeBlock || !codeLayer) return;
   codeBlock.textContent = makeCodeLines();
-
-  // Start lower so it has room to scroll through the masked window
   gsap.set(codeBlock, { y: 420, x: 0 });
   gsap.set(codeLayer, { opacity: 0, y: 10 });
 }
 
-/* ─── Intro zoom math (works with your viewBox) ─────────────────────────
-   ViewBox: 400x420
-   Adjust EAR_TOP_VB / EAR_BOTTOM_VB for tighter/looser intro framing.
-*/
+/* ─── Intro zoom math ────────────────────────────────────────────────── */
 const SVG_W = 400;
 const SVG_H = 420;
 
@@ -117,15 +132,12 @@ function getScales() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
-  // End: bunny at 65% of smaller viewport dimension
   const fitScale = Math.min(vw / SVG_W, vh / SVG_H) * 0.65;
 
-  // Start: scale so the ear slice fills the viewport height
   const startScaleV = vh / EAR_SLICE_VB;
   const startScaleH = vw / SVG_W;
   const startScale = Math.min(startScaleV, startScaleH);
 
-  // Place ear tops at ~35% from top, leaving whitespace above
   const earTopScreenY = vh * 0.35;
   const aboveCenter = (SVG_H / 2 - EAR_TOP_VB) * startScale;
   const startTranslateY = earTopScreenY - vh / 2 + aboveCenter;
@@ -150,19 +162,124 @@ function setCaption(index, { animate = true } = {}) {
   );
 }
 
+/* ─── Bunny state helpers ────────────────────────────────────────────── */
+function showIntroBunny() {
+  if (!bunnyIntro || !bunnyStory || !bunnyFace) return;
+
+  gsap.killTweensOf([bunnyIntro, bunnyStory, bunnyFace]);
+
+  gsap.set(bunnyIntro, { visibility: "visible" });
+  gsap.to(bunnyIntro, {
+    opacity: 1,
+    duration: 0.35,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to([bunnyStory, bunnyFace], {
+    opacity: 0,
+    duration: 0.35,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(bunnyStory, { visibility: "hidden" });
+      gsap.set(bunnyFace, { visibility: "hidden" });
+    }
+  });
+}
+
+function showStorySideBunny() {
+  if (!bunnyIntro || !bunnyStory || !bunnyFace) return;
+
+  gsap.killTweensOf([bunnyIntro, bunnyStory, bunnyFace]);
+
+  gsap.set(bunnyStory, { visibility: "visible" });
+  gsap.to(bunnyStory, {
+    opacity: 1,
+    duration: 0.4,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to([bunnyIntro, bunnyFace], {
+    opacity: 0,
+    duration: 0.35,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(bunnyIntro, { visibility: "hidden" });
+      gsap.set(bunnyFace, { visibility: "hidden" });
+    }
+  });
+}
+
+function showFaceBunny() {
+  if (!bunnyIntro || !bunnyStory || !bunnyFace) return;
+
+  gsap.killTweensOf([bunnyIntro, bunnyStory, bunnyFace]);
+
+  gsap.set(bunnyFace, { visibility: "visible" });
+  gsap.to(bunnyFace, {
+    opacity: 1,
+    duration: 0.45,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to([bunnyIntro, bunnyStory], {
+    opacity: 0,
+    duration: 0.35,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(bunnyIntro, { visibility: "hidden" });
+      gsap.set(bunnyStory, { visibility: "hidden" });
+    }
+  });
+}
+
+/* ─── Hay helpers ────────────────────────────────────────────────────── */
+function hideHay() {
+  if (!hayWrap) return;
+  gsap.killTweensOf(hayWrap);
+  gsap.to(hayWrap, {
+    opacity: 0,
+    y: 12,
+    rotation: -4,
+    duration: 0.25,
+    ease: "power2.out",
+    overwrite: true,
+    onStart: () => gsap.set(hayWrap, { visibility: "visible" }),
+    onComplete: () => gsap.set(hayWrap, { visibility: "hidden" })
+  });
+}
+
+function showHay() {
+  if (!hayWrap) return;
+  gsap.killTweensOf(hayWrap);
+  gsap.set(hayWrap, { visibility: "visible" });
+  gsap.fromTo(
+    hayWrap,
+    { opacity: 0, y: 12, rotation: -6 },
+    { opacity: 1, y: 0, rotation: -4, duration: 0.4, ease: "power2.out", overwrite: true }
+  );
+}
+
 function setup() {
   ScrollTrigger.getAll().forEach((st) => st.kill());
 
   initCodeLayer();
 
-  // Start states
   gsap.set([titleH1, titleSub], { opacity: 0 });
   gsap.set(captionArea, { opacity: 0, y: 6 });
 
-  // Preload story section 2 text (but keep hidden until intro ends)
+  gsap.set(bunnyIntro, { opacity: 1, visibility: "visible" });
+  gsap.set(bunnyStory, { opacity: 0, visibility: "hidden" });
+  if (bunnyFace) gsap.set(bunnyFace, { opacity: 0, visibility: "hidden" });
+  if (hayWrap) gsap.set(hayWrap, { opacity: 0, visibility: "hidden", y: 12, rotation: -4 });
+
   setCaption(1, { animate: false });
 
-  // ─── Intro zoom timeline (driven only by intro step) ──────────────────
   const { fitScale, startScale, startTranslateY } = getScales();
 
   gsap.set(wrap, {
@@ -171,6 +288,7 @@ function setup() {
     y: startTranslateY
   });
 
+  /* ─── Intro timeline ──────────────────────────────────────────────── */
   const introTL = gsap.timeline({
     scrollTrigger: {
       trigger: introStep,
@@ -180,7 +298,6 @@ function setup() {
     }
   });
 
-  // Title fade in
   introTL.to([titleH1, titleSub], {
     opacity: 1,
     duration: 0.25,
@@ -188,14 +305,12 @@ function setup() {
     ease: "power2.out"
   }, 0);
 
-  // Title fade out
   introTL.to([titleH1, titleSub], {
     opacity: 0,
     duration: 0.18,
     ease: "power2.in"
   }, 0.28);
 
-  // Bunny zoom out to “natural”
   introTL.to(wrap, {
     scale: 1,
     y: 0,
@@ -203,7 +318,6 @@ function setup() {
     duration: 0.6
   }, 0.3);
 
-  // Fade captions in AFTER zoom-out (story begins here)
   introTL.to(captionArea, {
     opacity: 1,
     y: 0,
@@ -211,7 +325,7 @@ function setup() {
     ease: "power2.out"
   }, 0.92);
 
-  // ─── Step triggers (sections 2–7) ─────────────────────────────────────
+  /* ─── Step triggers ──────────────────────────────────────────────── */
   steps.forEach((stepEl) => {
     const idx = Number(stepEl.dataset.step);
 
@@ -222,25 +336,58 @@ function setup() {
       onEnter: () => {
         if (idx === 0) {
           gsap.to(captionArea, { opacity: 0, y: 6, duration: 0.2, overwrite: true });
+          showIntroBunny();
+          hideHay();
           return;
         }
+
         gsap.to(captionArea, { opacity: 1, y: 0, duration: 0.2, overwrite: true });
         setCaption(idx, { animate: true });
+
+        if (idx === 3) {
+          showFaceBunny();
+        } else if (idx >= 2) {
+          showStorySideBunny();
+        } else {
+          showIntroBunny();
+        }
+
+        if (idx === 2) {
+          showHay();
+        } else {
+          hideHay();
+        }
       },
       onEnterBack: () => {
         if (idx === 0) {
           gsap.to(captionArea, { opacity: 0, y: 6, duration: 0.2, overwrite: true });
+          showIntroBunny();
+          hideHay();
           return;
         }
+
         gsap.to(captionArea, { opacity: 1, y: 0, duration: 0.2, overwrite: true });
         setCaption(idx, { animate: true });
+
+        if (idx === 3) {
+          showFaceBunny();
+        } else if (idx >= 2) {
+          showStorySideBunny();
+        } else {
+          showIntroBunny();
+        }
+
+        if (idx === 2) {
+          showHay();
+        } else {
+          hideHay();
+        }
       }
     });
   });
 
-  // ─── Code layer animation (only in section 2 / data-step="1") ──────────
+  /* ─── Code layer only on The Arrival ─────────────────────────────── */
   if (step2 && codeLayer && codeBlock) {
-    // Fade in/out when entering section 2
     ScrollTrigger.create({
       trigger: step2,
       start: "top 65%",
@@ -251,9 +398,8 @@ function setup() {
       onLeaveBack: () => gsap.to(codeLayer, { opacity: 0, y: 10, duration: 0.25, ease: "power2.in" })
     });
 
-    // Scroll the code behind the bunny while section 2 is active
     gsap.to(codeBlock, {
-      y: -1100,     // long travel so it feels like a real file
+      y: -1100,
       ease: "none",
       scrollTrigger: {
         trigger: step2,
@@ -263,7 +409,6 @@ function setup() {
       }
     });
 
-    // Optional gentle sideways drift (small, so it stays centered-feeling)
     gsap.to(codeBlock, {
       x: 8,
       ease: "none",
@@ -276,7 +421,7 @@ function setup() {
     });
   }
 
-  // Ambient light drift tied to scroll progress
+  /* ─── Ambient light drift ────────────────────────────────────────── */
   ScrollTrigger.create({
     trigger: document.getElementById("track"),
     start: "top top",
