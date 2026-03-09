@@ -179,6 +179,14 @@ body {
 }
 
 /* ─── Scene ──────────────────────────────────────────────────────────── */
+.step--end {
+  height: 200vh;
+}
+
+.step--outro-spacer {
+  height: 120vh;
+}
+
 .scene {
   position: relative;
   z-index: 2;
@@ -281,6 +289,41 @@ body {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* ─── End ball ──────────────────────────────────────────────────────── */
+.endBallWrap {
+  position: absolute;
+  left: -5%;
+  bottom: -10%;
+  width: min(140px, 20vw);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
+}
+
+.endBallWrap svg {
+  display: block;
+  width: 150%;
+  height: auto;
+  overflow: visible;
+}
+
+#ballGroup {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+#bunnyStory #bunnyGroup {
+  transform-box: fill-box;
+  transform-origin: 50% 80%;
+}
+
+#bunnyStory #headGroup {
+  transform-box: fill-box;
+  transform-origin: 60% 85%;
 }
 
 /* ─── Title ──────────────────────────────────────────────────────────── */
@@ -428,6 +471,12 @@ body {
   .callout--2 { right: 2%; top: 21%; }
   .callout--3 { left: 2%; bottom: 24%; }
   .callout--4 { right: 2%; bottom: 17%; }
+
+  .endBallWrap {
+    width: min(120px, 22vw);
+    left: 10%;
+    bottom: 13%;
+  }
 }
 
 @media (max-width: 640px) {
@@ -438,5 +487,11 @@ body {
 
   .calloutValue {
     font-size: 13px;
+  }
+
+  .endBallWrap {
+    width: min(100px, 24vw);
+    left: 8%;
+    bottom: 14%;
   }
 }

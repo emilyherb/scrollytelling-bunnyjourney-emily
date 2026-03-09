@@ -18,6 +18,14 @@ const bunnyStory = document.getElementById("bunnyStory");
 const bunnyFace = document.getElementById("bunnyFace");
 const hayWrap = document.getElementById("hayWrap");
 const bookshelfWrap = document.getElementById("bookshelfWrap");
+const endBallWrap = document.getElementById("endBallWrap");
+const ballGroup = document.getElementById("ballGroup");
+
+const poseStand = document.getElementById("pose-stand");
+const poseLay = document.getElementById("pose-lay");
+const standEyeDark = document.getElementById("standEyeDark");
+const standEyeHi = document.getElementById("standEyeHi");
+const eyelidBlink = document.getElementById("eyelidBlink");
 
 const namingCallouts = document.getElementById("namingCallouts");
 const calloutEnergy = document.getElementById("calloutEnergy");
@@ -27,8 +35,9 @@ const calloutSafe = document.getElementById("calloutSafe");
 
 const introStep = document.querySelector(".step--intro");
 const steps = Array.from(document.querySelectorAll(".step[data-step]"));
-const step2 = document.querySelector('.step[data-step="1"]'); // The Arrival
+const step2 = document.querySelector('.step[data-step="1"]');
 const namingThingsStep = document.querySelector('.step[data-step="3"]');
+const endStep = document.querySelector('.step[data-step="6"]');
 
 /* ─── Story Content ──────────────────────────────────────────────────── */
 const STORY = [
@@ -60,7 +69,12 @@ const STORY = [
     text: "I don't relearn the world every day.",
     small: "I remember what happens next before it even happens."
   },
-  { kicker: "THE END", text: "The world still surprises me. I still make mistakes. I still have to listen. But now, when something new arrives, I don't freeze the way I used to. I watch. I test. I learn.", small: "" }
+  {
+    kicker: "THE END",
+    text:
+      "The world still surprises me. I still make mistakes. I still have to listen. But now, when something new arrives, I don't freeze the way I used to. I watch. I test. I learn.",
+    small: ""
+  }
 ];
 
 /* ─── Code content ───────────────────────────────────────────────────── */
@@ -300,6 +314,300 @@ function showBookshelf() {
   );
 }
 
+/* ─── End pose helpers ──────────────────────────────────────────────── */
+let endBallTL = null;
+
+function resetEndAnimation() {
+  if (endBallTL) {
+    endBallTL.kill();
+    endBallTL = null;
+  }
+
+  if (!endBallWrap || !ballGroup || !bunnyStory) return;
+
+  gsap.killTweensOf([
+    endBallWrap,
+    ballGroup,
+    "#bunnyStory #bunnyGroup",
+    "#bunnyStory #headGroup",
+    bunnyStory,
+    poseStand,
+    poseLay,
+    standEyeDark,
+    standEyeHi,
+    eyelidBlink
+  ]);
+
+  gsap.set(endBallWrap, {
+    visibility: "hidden",
+    opacity: 0,
+    x: 0,
+    y: 0
+  });
+
+  gsap.set(ballGroup, {
+    rotation: 0
+  });
+
+  gsap.set("#bunnyStory #bunnyGroup", {
+    rotation: 0
+  });
+
+  gsap.set("#bunnyStory #headGroup", {
+    rotation: 0,
+    transformBox: "fill-box",
+    transformOrigin: "60% 85%"
+  });
+
+  gsap.set(poseStand, {
+    opacity: 1,
+    visibility: "visible"
+  });
+
+  gsap.set(poseLay, {
+    opacity: 0,
+    visibility: "hidden"
+  });
+
+  if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+  if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+  if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+
+  gsap.set(bunnyStory, {
+    y: 0,
+    scaleX: 1,
+    scaleY: 1,
+    transformOrigin: "50% 50%"
+  });
+}
+
+function showEndBall() {
+  if (!endBallWrap) return;
+  gsap.set(endBallWrap, {
+    visibility: "visible",
+    opacity: 1
+  });
+}
+
+function hideEndBall() {
+  if (!endBallWrap) return;
+  gsap.set(endBallWrap, {
+    visibility: "hidden",
+    opacity: 0
+  });
+}
+
+function initEndScrollAnimation() {
+  if (!endStep || !endBallWrap || !ballGroup || !bunnyStory || !poseStand || !poseLay) return;
+
+  gsap.set("#bunnyStory #bunnyGroup", {
+    transformBox: "fill-box",
+    transformOrigin: "50% 80%"
+  });
+
+  gsap.set("#bunnyStory #headGroup", {
+    transformBox: "fill-box",
+    transformOrigin: "60% 85%"
+  });
+
+  gsap.set(endBallWrap, {
+    x: 0,
+    y: 0,
+    opacity: 0,
+    visibility: "hidden"
+  });
+
+  gsap.set(ballGroup, {
+    rotation: 0
+  });
+
+  gsap.set(poseStand, {
+    opacity: 1,
+    visibility: "visible"
+  });
+
+  gsap.set(poseLay, {
+    opacity: 0,
+    visibility: "hidden"
+  });
+
+  if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+  if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+  if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+
+  gsap.set(bunnyStory, {
+    y: 0,
+    scaleX: 1,
+    scaleY: 1,
+    transformOrigin: "50% 50%"
+  });
+
+  endBallTL = gsap.timeline({
+    scrollTrigger: {
+      trigger: endStep,
+      start: "top center",
+      end: "bottom center",
+      scrub: 1,
+      onEnter: () => {
+        showStorySideBunny();
+        showEndBall();
+      },
+      onEnterBack: () => {
+        showStorySideBunny();
+        showEndBall();
+      },
+      onLeave: () => {
+        hideEndBall();
+      },
+      onLeaveBack: () => {
+        hideEndBall();
+      }
+    }
+  });
+
+  endBallTL
+    /* show ball */
+    .to(endBallWrap, {
+      opacity: 1,
+      visibility: "visible",
+      duration: 0.04
+    }, 0)
+
+    /* anticipation */
+    .to("#bunnyStory #bunnyGroup", {
+      rotation: -2,
+      duration: 0.10,
+      ease: "none"
+    }, 0.10)
+
+    .to("#bunnyStory #headGroup", {
+      rotation: -10,
+      duration: 0.12,
+      ease: "none"
+    }, 0.10)
+
+    /* lunge */
+    .to("#bunnyStory #headGroup", {
+      rotation: 18,
+      duration: 0.08,
+      ease: "none"
+    }, 0.24)
+
+    /* impact */
+    .to(endBallWrap, {
+      x: -18,
+      duration: 0.03,
+      ease: "none"
+    }, 0.32)
+
+    .to(ballGroup, {
+      rotation: -25,
+      duration: 0.03,
+      ease: "none"
+    }, 0.32)
+
+    /* roll far away */
+    .to(endBallWrap, {
+      x: -2250,
+      duration: 0.28,
+      ease: "none"
+    }, 0.35)
+
+    .to(ballGroup, {
+      rotation: -1000,
+      duration: 0.28,
+      ease: "none"
+    }, 0.35)
+
+    .to(endBallWrap, {
+      y: -18,
+      duration: 0.06,
+      ease: "none"
+    }, 0.41)
+
+    .to(endBallWrap, {
+      y: 0,
+      duration: 0.08,
+      ease: "none"
+    }, 0.47)
+
+    /* bunny settles */
+    .to("#bunnyStory #headGroup", {
+      rotation: 0,
+      duration: 0.12,
+      ease: "none"
+    }, 0.40)
+
+    .to("#bunnyStory #bunnyGroup", {
+      rotation: 0,
+      duration: 0.12,
+      ease: "none"
+    }, 0.45)
+
+    /* ball fades once gone */
+    .to(endBallWrap, {
+      opacity: 0,
+      duration: 0.04,
+      ease: "none"
+    }, 0.58)
+
+    /* blink / soften before loaf */
+    .to([standEyeDark, standEyeHi].filter(Boolean), {
+      opacity: 0,
+      duration: 0.04,
+      ease: "none"
+    }, 0.60)
+
+    .to(eyelidBlink, {
+      opacity: 1,
+      visibility: "visible",
+      duration: 0.05,
+      ease: "none"
+    }, 0.60)
+
+    /* crossfade to loaf */
+    .to(poseStand, {
+      opacity: 0,
+      duration: 0.10,
+      ease: "none"
+    }, 0.68)
+
+    .to(poseLay, {
+      opacity: 1,
+      visibility: "visible",
+      duration: 0.12,
+      ease: "none"
+    }, 0.70)
+
+    /* loaf settle */
+    .to(bunnyStory, {
+      y: 6,
+      scaleY: 0.985,
+      duration: 0.08,
+      ease: "none"
+    }, 0.76)
+
+    .to(bunnyStory, {
+      y: 4,
+      scaleY: 1,
+      duration: 0.08,
+      ease: "none"
+    }, 0.84)
+
+    /* tiny breathing at the end */
+    .to(bunnyStory, {
+      scaleY: 1.012,
+      duration: 0.06,
+      ease: "none"
+    }, 0.90)
+
+    .to(bunnyStory, {
+      scaleY: 1,
+      duration: 0.06,
+      ease: "none"
+    }, 0.96);
+}
+
 /* ─── Naming Things callouts ────────────────────────────────────────── */
 function hideNamingCallouts() {
   if (!namingCallouts) return;
@@ -371,6 +679,7 @@ function updateNamingCallouts(progress) {
 
 function setup() {
   ScrollTrigger.getAll().forEach((st) => st.kill());
+  resetEndAnimation();
 
   initCodeLayer();
 
@@ -382,6 +691,26 @@ function setup() {
   if (bunnyFace) gsap.set(bunnyFace, { opacity: 0, visibility: "hidden" });
   if (hayWrap) gsap.set(hayWrap, { opacity: 0, visibility: "hidden", y: 12, rotation: -4 });
   if (bookshelfWrap) gsap.set(bookshelfWrap, { opacity: 0, visibility: "hidden", y: 10, scale: 0.96 });
+
+  if (endBallWrap) {
+    gsap.set(endBallWrap, {
+      opacity: 0,
+      visibility: "hidden",
+      x: 0,
+      y: 0
+    });
+  }
+
+  if (ballGroup) {
+    gsap.set(ballGroup, { rotation: 0 });
+  }
+
+  if (poseStand) gsap.set(poseStand, { opacity: 1, visibility: "visible" });
+  if (poseLay) gsap.set(poseLay, { opacity: 0, visibility: "hidden" });
+  if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+  if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+  if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+  if (bunnyStory) gsap.set(bunnyStory, { y: 0, scaleX: 1, scaleY: 1, transformOrigin: "50% 50%" });
 
   if (namingCallouts) {
     gsap.set(namingCallouts, { opacity: 0, visibility: "hidden" });
@@ -455,6 +784,7 @@ function setup() {
           hideHay();
           hideNamingCallouts();
           hideBookshelf();
+          hideEndBall();
           return;
         }
 
@@ -485,6 +815,12 @@ function setup() {
           showBookshelf();
         } else {
           hideBookshelf();
+        }
+
+        if (idx === 6) {
+          showStorySideBunny();
+        } else {
+          hideEndBall();
         }
       },
       onEnterBack: () => {
@@ -494,6 +830,7 @@ function setup() {
           hideHay();
           hideNamingCallouts();
           hideBookshelf();
+          hideEndBall();
           return;
         }
 
@@ -524,6 +861,12 @@ function setup() {
           showBookshelf();
         } else {
           hideBookshelf();
+        }
+
+        if (idx === 6) {
+          showStorySideBunny();
+        } else {
+          hideEndBall();
         }
       }
     });
@@ -576,6 +919,9 @@ function setup() {
       }
     });
   }
+
+  /* ─── End section scrub animation ─────────────────────────────────── */
+  initEndScrollAnimation();
 
   /* ─── Ambient light drift ────────────────────────────────────────── */
   ScrollTrigger.create({
