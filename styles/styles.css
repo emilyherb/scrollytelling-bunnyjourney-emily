@@ -295,7 +295,7 @@ body {
 .bookshelfWrap {
   position: absolute;
   left: 80%;
-  top: -15%;
+  top: 30%;
   width: min(340px, 44vw);
   opacity: 0;
   visibility: hidden;

@@ -304,6 +304,7 @@ function hideConsoleBox(force = false) {
   consoleBoxVisible = false;
   gsap.killTweensOf(consoleBoxWrap);
   gsap.to(consoleBoxWrap, {
+    xPercent: -50,
     opacity: 0,
     y: 12,
     duration: 0.22,
@@ -320,12 +321,22 @@ function showConsoleBox() {
 
   consoleBoxVisible = true;
   gsap.killTweensOf(consoleBoxWrap);
-  gsap.set(consoleBoxWrap, { visibility: "visible" });
+  gsap.set(consoleBoxWrap, { visibility: "visible", xPercent: -50 });
   gsap.fromTo(
     consoleBoxWrap,
-    { opacity: 0, y: 12 },
-    { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", overwrite: true }
+    { xPercent: -50, opacity: 0, y: 12 },
+    { xPercent: -50, opacity: 1, y: 0, duration: 0.35, ease: "power2.out", overwrite: true }
   );
+}
+
+function enableFirstContactHeadroom() {
+  if (!bunnyStory) return;
+  bunnyStory.style.overflow = "visible";
+}
+
+function disableFirstContactHeadroom() {
+  if (!bunnyStory) return;
+  bunnyStory.style.overflow = "";
 }
 
 /* ─── Bookshelf helpers ──────────────────────────────────────────────── */
@@ -333,6 +344,8 @@ function hideBookshelf() {
   if (!bookshelfWrap) return;
   gsap.killTweensOf(bookshelfWrap);
   gsap.to(bookshelfWrap, {
+    xPercent: -50,
+    yPercent: -56,
     opacity: 0,
     y: 10,
     scale: 0.96,
@@ -347,11 +360,11 @@ function hideBookshelf() {
 function showBookshelf() {
   if (!bookshelfWrap) return;
   gsap.killTweensOf(bookshelfWrap);
-  gsap.set(bookshelfWrap, { visibility: "visible" });
+  gsap.set(bookshelfWrap, { visibility: "visible", xPercent: -50, yPercent: -56 });
   gsap.fromTo(
     bookshelfWrap,
-    { opacity: 0, y: 14, scale: 0.94 },
-    { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out", overwrite: true }
+    { xPercent: -50, yPercent: -56, opacity: 0, y: 14, scale: 0.94 },
+    { xPercent: -50, yPercent: -56, opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out", overwrite: true }
   );
 }
 
@@ -396,6 +409,7 @@ function resetFirstContactAnimation() {
   }
 
   hideConsoleBox(true);
+  disableFirstContactHeadroom();
 }
 
 function initFirstContactAnimation() {
@@ -476,21 +490,24 @@ function initFirstContactAnimation() {
     start: "top bottom",
     end: "bottom top",
     scrub: 1.2,
-onUpdate: (self) => {
-  firstContactTL.progress(self.progress);
+    onEnter: () => enableFirstContactHeadroom(),
+    onEnterBack: () => enableFirstContactHeadroom(),
+    onUpdate: (self) => {
+      firstContactTL.progress(self.progress);
 
-  const SHOW_AT = 0.48;
-  const HIDE_AT = 0.75;
+      const SHOW_AT = 0.48;
+      const HIDE_AT = 0.75;
 
-  if (self.progress >= SHOW_AT && self.progress < HIDE_AT) {
-    showConsoleBox();
-  } else {
-    hideConsoleBox();
-  }
-},
+      if (self.progress >= SHOW_AT && self.progress < HIDE_AT) {
+        showConsoleBox();
+      } else {
+        hideConsoleBox();
+      }
+    },
     onLeave: () => {
       firstContactTL.progress(1);
       hideConsoleBox(true);
+      disableFirstContactHeadroom();
     },
     onLeaveBack: () => {
       resetFirstContactAnimation();
@@ -865,8 +882,26 @@ function setup() {
   if (bunnyFace) gsap.set(bunnyFace, { opacity: 0, visibility: "hidden" });
   if (hayWrap) gsap.set(hayWrap, { opacity: 0, visibility: "hidden", y: 12, rotation: -4 });
   if (haySingleGroup) gsap.set(haySingleGroup, { x: 0, rotation: 0, transformOrigin: "0% 50%" });
-  if (bookshelfWrap) gsap.set(bookshelfWrap, { opacity: 0, visibility: "hidden", y: 10, scale: 0.96 });
-  if (consoleBoxWrap) gsap.set(consoleBoxWrap, { opacity: 0, visibility: "hidden", y: 12 });
+  if (bookshelfWrap) {
+    gsap.set(bookshelfWrap, {
+      xPercent: -50,
+      yPercent: -56,
+      opacity: 0,
+      visibility: "hidden",
+      y: 10,
+      scale: 0.96
+    });
+  }
+
+  if (consoleBoxWrap) {
+    gsap.set(consoleBoxWrap, {
+      xPercent: -50,
+      opacity: 0,
+      visibility: "hidden",
+      y: 12
+    });
+  }
+  disableFirstContactHeadroom();
 
   if (endBallWrap) {
     gsap.set(endBallWrap, {
@@ -1083,17 +1118,6 @@ function setup() {
         scrub: true
       }
     });
-
-    gsap.to(codeBlock, {
-      x: 8,
-      ease: "none",
-      scrollTrigger: {
-        trigger: step2,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
-      }
-    });
   }
 
   /* ─── First Contact scrub animation ───────────────────────────────── */
@@ -1121,9 +1145,8 @@ function setup() {
     start: "top top",
     end: "bottom bottom",
     scrub: true,
-    onUpdate: (self) => {
-      const x = gsap.utils.mapRange(0, 1, -40, 50, self.progress);
-      document.documentElement.style.setProperty("--light-x", `${x}px`);
+    onUpdate: () => {
+      document.documentElement.style.setProperty("--light-x", "0px");
     }
   });
 
