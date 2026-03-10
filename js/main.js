@@ -17,7 +17,9 @@ const bunnyIntro = document.getElementById("bunnyIntro");
 const bunnyStory = document.getElementById("bunnyStory");
 const bunnyFace = document.getElementById("bunnyFace");
 const hayWrap = document.getElementById("hayWrap");
+const haySingleGroup = document.getElementById("haySingleGroup");
 const bookshelfWrap = document.getElementById("bookshelfWrap");
+const consoleBoxWrap = document.getElementById("consoleBoxWrap");
 const endBallWrap = document.getElementById("endBallWrap");
 const ballGroup = document.getElementById("ballGroup");
 
@@ -26,6 +28,10 @@ const poseLay = document.getElementById("pose-lay");
 const standEyeDark = document.getElementById("standEyeDark");
 const standEyeHi = document.getElementById("standEyeHi");
 const eyelidBlink = document.getElementById("eyelidBlink");
+
+const storyHeadGroup = document.querySelector("#bunnyStory #headGroup");
+const nearEarKick = document.getElementById("nearEarKick");
+const farEarKick = document.getElementById("farEarKick");
 
 const namingCallouts = document.getElementById("namingCallouts");
 const calloutEnergy = document.getElementById("calloutEnergy");
@@ -36,6 +42,7 @@ const calloutSafe = document.getElementById("calloutSafe");
 const introStep = document.querySelector(".step--intro");
 const steps = Array.from(document.querySelectorAll(".step[data-step]"));
 const step2 = document.querySelector('.step[data-step="1"]');
+const firstContactStep = document.querySelector('.step[data-step="2"]');
 const namingThingsStep = document.querySelector('.step[data-step="3"]');
 const endStep = document.querySelector('.step[data-step="6"]');
 
@@ -287,6 +294,40 @@ function showHay() {
   );
 }
 
+/* ─── First Contact console helpers ─────────────────────────────────── */
+let consoleBoxVisible = false;
+
+function hideConsoleBox(force = false) {
+  if (!consoleBoxWrap) return;
+  if (!force && !consoleBoxVisible) return;
+
+  consoleBoxVisible = false;
+  gsap.killTweensOf(consoleBoxWrap);
+  gsap.to(consoleBoxWrap, {
+    opacity: 0,
+    y: 12,
+    duration: 0.22,
+    ease: "power2.out",
+    overwrite: true,
+    onStart: () => gsap.set(consoleBoxWrap, { visibility: "visible" }),
+    onComplete: () => gsap.set(consoleBoxWrap, { visibility: "hidden" })
+  });
+}
+
+function showConsoleBox() {
+  if (!consoleBoxWrap) return;
+  if (consoleBoxVisible) return;
+
+  consoleBoxVisible = true;
+  gsap.killTweensOf(consoleBoxWrap);
+  gsap.set(consoleBoxWrap, { visibility: "visible" });
+  gsap.fromTo(
+    consoleBoxWrap,
+    { opacity: 0, y: 12 },
+    { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", overwrite: true }
+  );
+}
+
 /* ─── Bookshelf helpers ──────────────────────────────────────────────── */
 function hideBookshelf() {
   if (!bookshelfWrap) return;
@@ -312,6 +353,149 @@ function showBookshelf() {
     { opacity: 0, y: 14, scale: 0.94 },
     { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out", overwrite: true }
   );
+}
+
+/* ─── First Contact scrub animation ─────────────────────────────────── */
+let firstContactTL = null;
+
+function resetFirstContactAnimation() {
+  if (firstContactTL) {
+    firstContactTL.kill();
+    firstContactTL = null;
+  }
+
+  if (storyHeadGroup) {
+    gsap.set(storyHeadGroup, {
+      x: 0,
+      y: 0,
+      rotation: 0,
+      transformOrigin: "50% 80%"
+    });
+  }
+
+  if (nearEarKick) {
+    gsap.set(nearEarKick, {
+      rotation: 0,
+      transformOrigin: "50% 100%"
+    });
+  }
+
+  if (farEarKick) {
+    gsap.set(farEarKick, {
+      rotation: 0,
+      transformOrigin: "50% 100%"
+    });
+  }
+
+  if (haySingleGroup) {
+    gsap.set(haySingleGroup, {
+      x: 0,
+      rotation: 0,
+      transformOrigin: "0% 50%"
+    });
+  }
+
+  hideConsoleBox(true);
+}
+
+function initFirstContactAnimation() {
+  if (!firstContactStep || !storyHeadGroup || !haySingleGroup) return;
+
+  resetFirstContactAnimation();
+
+  firstContactTL = gsap.timeline({ paused: true });
+
+  firstContactTL
+    .to(storyHeadGroup, {
+      duration: 0.38,
+      x: -16,
+      y: 60,
+      rotation: -30,
+      transformOrigin: "50% 80%",
+      ease: "power2.in"
+    })
+
+    .to(storyHeadGroup, {
+      duration: 0.07,
+      x: -22,
+      y: 65,
+      ease: "none"
+    })
+
+    .to(nearEarKick, {
+      duration: 0.14,
+      rotation: 14,
+      transformOrigin: "50% 100%",
+      ease: "power3.out"
+    }, "<")
+
+    .to(farEarKick, {
+      duration: 0.14,
+      rotation: -10,
+      transformOrigin: "50% 100%",
+      ease: "power3.out"
+    }, "<")
+
+    .to(haySingleGroup, {
+      duration: 0.20,
+      x: -32,
+      ease: "power3.out"
+    }, "<+0.04")
+
+    .to(haySingleGroup, {
+      duration: 0.16,
+      rotation: 2.5,
+      transformOrigin: "0% 50%",
+      ease: "power2.out"
+    }, "<")
+
+    .to(storyHeadGroup, {
+      duration: 0.45,
+      x: 0,
+      y: 0,
+      rotation: 0,
+      ease: "power2.out"
+    }, "+=0.06")
+
+    .to([nearEarKick, farEarKick].filter(Boolean), {
+      duration: 0.35,
+      rotation: 0,
+      ease: "elastic.out(1, 0.5)"
+    }, "<")
+
+    .to(haySingleGroup, {
+      duration: 0.5,
+      rotation: 0,
+      ease: "elastic.out(1, 0.4)"
+    }, "<+0.1");
+
+  const HAY_MOVED_THRESHOLD = 0.48;
+
+  ScrollTrigger.create({
+    trigger: firstContactStep,
+    start: "top bottom",
+    end: "bottom top",
+    scrub: 1.2,
+onUpdate: (self) => {
+  firstContactTL.progress(self.progress);
+
+  const SHOW_AT = 0.48;
+  const HIDE_AT = 0.75;
+
+  if (self.progress >= SHOW_AT && self.progress < HIDE_AT) {
+    showConsoleBox();
+  } else {
+    hideConsoleBox();
+  }
+},
+    onLeave: () => {
+      firstContactTL.progress(1);
+      hideConsoleBox(true);
+    },
+    onLeaveBack: () => {
+      resetFirstContactAnimation();
+    }
+  });
 }
 
 /* ─── End pose helpers ──────────────────────────────────────────────── */
@@ -466,14 +650,12 @@ function initEndScrollAnimation() {
   });
 
   endBallTL
-    /* show ball */
     .to(endBallWrap, {
       opacity: 1,
       visibility: "visible",
       duration: 0.04
     }, 0)
 
-    /* anticipation */
     .to("#bunnyStory #bunnyGroup", {
       rotation: -2,
       duration: 0.10,
@@ -486,14 +668,12 @@ function initEndScrollAnimation() {
       ease: "none"
     }, 0.10)
 
-    /* lunge */
     .to("#bunnyStory #headGroup", {
       rotation: 18,
       duration: 0.08,
       ease: "none"
     }, 0.24)
 
-    /* impact */
     .to(endBallWrap, {
       x: -18,
       duration: 0.03,
@@ -506,7 +686,6 @@ function initEndScrollAnimation() {
       ease: "none"
     }, 0.32)
 
-    /* roll far away */
     .to(endBallWrap, {
       x: -2250,
       duration: 0.28,
@@ -531,7 +710,6 @@ function initEndScrollAnimation() {
       ease: "none"
     }, 0.47)
 
-    /* bunny settles */
     .to("#bunnyStory #headGroup", {
       rotation: 0,
       duration: 0.12,
@@ -544,14 +722,12 @@ function initEndScrollAnimation() {
       ease: "none"
     }, 0.45)
 
-    /* ball fades once gone */
     .to(endBallWrap, {
       opacity: 0,
       duration: 0.04,
       ease: "none"
     }, 0.58)
 
-    /* blink / soften before loaf */
     .to([standEyeDark, standEyeHi].filter(Boolean), {
       opacity: 0,
       duration: 0.04,
@@ -565,7 +741,6 @@ function initEndScrollAnimation() {
       ease: "none"
     }, 0.60)
 
-    /* crossfade to loaf */
     .to(poseStand, {
       opacity: 0,
       duration: 0.10,
@@ -579,7 +754,6 @@ function initEndScrollAnimation() {
       ease: "none"
     }, 0.70)
 
-    /* loaf settle */
     .to(bunnyStory, {
       y: 6,
       scaleY: 0.985,
@@ -594,7 +768,6 @@ function initEndScrollAnimation() {
       ease: "none"
     }, 0.84)
 
-    /* tiny breathing at the end */
     .to(bunnyStory, {
       scaleY: 1.012,
       duration: 0.06,
@@ -680,6 +853,7 @@ function updateNamingCallouts(progress) {
 function setup() {
   ScrollTrigger.getAll().forEach((st) => st.kill());
   resetEndAnimation();
+  resetFirstContactAnimation();
 
   initCodeLayer();
 
@@ -690,7 +864,9 @@ function setup() {
   gsap.set(bunnyStory, { opacity: 0, visibility: "hidden" });
   if (bunnyFace) gsap.set(bunnyFace, { opacity: 0, visibility: "hidden" });
   if (hayWrap) gsap.set(hayWrap, { opacity: 0, visibility: "hidden", y: 12, rotation: -4 });
+  if (haySingleGroup) gsap.set(haySingleGroup, { x: 0, rotation: 0, transformOrigin: "0% 50%" });
   if (bookshelfWrap) gsap.set(bookshelfWrap, { opacity: 0, visibility: "hidden", y: 10, scale: 0.96 });
+  if (consoleBoxWrap) gsap.set(consoleBoxWrap, { opacity: 0, visibility: "hidden", y: 12 });
 
   if (endBallWrap) {
     gsap.set(endBallWrap, {
@@ -711,6 +887,9 @@ function setup() {
   if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
   if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
   if (bunnyStory) gsap.set(bunnyStory, { y: 0, scaleX: 1, scaleY: 1, transformOrigin: "50% 50%" });
+  if (storyHeadGroup) gsap.set(storyHeadGroup, { x: 0, y: 0, rotation: 0, transformOrigin: "50% 80%" });
+  if (nearEarKick) gsap.set(nearEarKick, { rotation: 0, transformOrigin: "50% 100%" });
+  if (farEarKick) gsap.set(farEarKick, { rotation: 0, transformOrigin: "50% 100%" });
 
   if (namingCallouts) {
     gsap.set(namingCallouts, { opacity: 0, visibility: "hidden" });
@@ -782,6 +961,7 @@ function setup() {
           gsap.to(captionArea, { opacity: 0, y: 6, duration: 0.2, overwrite: true });
           showIntroBunny();
           hideHay();
+          hideConsoleBox(true);
           hideNamingCallouts();
           hideBookshelf();
           hideEndBall();
@@ -803,6 +983,10 @@ function setup() {
           showHay();
         } else {
           hideHay();
+        }
+
+        if (idx !== 2) {
+          hideConsoleBox(true);
         }
 
         if (idx === 3) {
@@ -828,6 +1012,7 @@ function setup() {
           gsap.to(captionArea, { opacity: 0, y: 6, duration: 0.2, overwrite: true });
           showIntroBunny();
           hideHay();
+          hideConsoleBox(true);
           hideNamingCallouts();
           hideBookshelf();
           hideEndBall();
@@ -849,6 +1034,10 @@ function setup() {
           showHay();
         } else {
           hideHay();
+        }
+
+        if (idx !== 2) {
+          hideConsoleBox(true);
         }
 
         if (idx === 3) {
@@ -906,6 +1095,9 @@ function setup() {
       }
     });
   }
+
+  /* ─── First Contact scrub animation ───────────────────────────────── */
+  initFirstContactAnimation();
 
   /* ─── Naming Things progression ───────────────────────────────────── */
   if (namingThingsStep) {

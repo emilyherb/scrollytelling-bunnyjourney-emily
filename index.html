@@ -46,8 +46,15 @@
             <!-- HAY: only appears during FIRST CONTACT -->
             <div class="hayWrap" id="hayWrap" aria-hidden="true">
               <div class="haySingleWrap">
-                <svg class="haySingle" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="10" y1="25" x2="190" y2="23" stroke="#7BA056" stroke-width="2.5" stroke-linecap="round"/>
+                <svg class="haySingle" id="haySingleSvg" viewBox="0 0 260 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <g id="haySingleGroup">
+                    <line x1="10" y1="28" x2="245" y2="25" stroke="#7BA056" stroke-width="2.8" stroke-linecap="round"/>
+                    <line x1="60" y1="27" x2="54" y2="15" stroke="#6A9548" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="110" y1="26" x2="118" y2="14" stroke="#6A9548" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="165" y1="25" x2="159" y2="13" stroke="#6A9548" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="210" y1="25" x2="217" y2="14" stroke="#6A9548" stroke-width="1.8" stroke-linecap="round"/>
+                    <ellipse cx="247" cy="24" rx="9" ry="4.5" fill="#9BBF6A" opacity="0.9"/>
+                  </g>
                 </svg>
               </div>
 
@@ -333,7 +340,7 @@
                 <path d="M78 380 Q96 363 100 347 Q98 337 88 337 Q76 338 76 350 Q76 364 78 372" fill="#5aa058"/>
                 <path d="M86 368 Q94 356 92 346" stroke="#3a7040" stroke-width="1.5" fill="none"/>
                 <path d="M64 422 Q48 412 44 400 Q46 392 54 392 Q62 393 62 402" fill="#4a8848"/>
-                <path d="M66 418 Q80 406 84 394 Q82 386 74 386 Q66 388 66 398" fill="��5a9858"/>
+                <path d="M66 418 Q80 406 84 394 Q82 386 74 386 Q66 388 66 398" fill="#5a9858"/>
 
                 <rect x="102" y="356" width="26" height="152" fill="#3c2878" rx="2"/>
                 <rect x="102" y="356" width="5" height="152" fill="#281858"/>
@@ -668,7 +675,6 @@
                   </radialGradient>
                 </defs>
                 <g id="ballGroup">
-                
                   <ellipse cx="150" cy="150" rx="98" ry="105" fill="none" stroke="#6B4423" stroke-width="8" opacity="0.8" transform="rotate(5 150 150)"/>
                   <ellipse cx="148" cy="150" rx="92" ry="100" fill="none" stroke="#5C4033" stroke-width="7" opacity="0.75" transform="rotate(-8 150 150)"/>
                   <ellipse cx="150" cy="150" rx="85" ry="50" fill="none" stroke="#5C4033" stroke-width="7" opacity="0.85"/>
@@ -703,6 +709,69 @@
             </div>
           </div>
 
+          <!-- First Contact console box -->
+          <div class="consoleBoxWrap" id="consoleBoxWrap" aria-hidden="true">
+            <svg class="consoleBox" id="consoleBox" xmlns="http://www.w3.org/2000/svg" width="520" height="220" viewBox="0 0 520 220">
+              <defs>
+                <linearGradient id="consoleBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ffffff"/>
+                  <stop offset="100%" style="stop-color:#f9fafb"/>
+                </linearGradient>
+                <linearGradient id="consoleHeaderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#e5e7eb"/>
+                  <stop offset="100%" style="stop-color:#d1d5db"/>
+                </linearGradient>
+              </defs>
+
+              <rect width="520" height="220" rx="12" fill="url(#consoleBg)" stroke="#d1d5db" stroke-width="1.5"/>
+              <rect width="520" height="38" rx="12" fill="url(#consoleHeaderGrad)"/>
+              <rect y="26" width="520" height="12" fill="url(#consoleHeaderGrad)"/>
+
+              <circle cx="22" cy="19" r="6" fill="#ff5f57"/>
+              <circle cx="42" cy="19" r="6" fill="#febc2e"/>
+              <circle cx="62" cy="19" r="6" fill="#28c840"/>
+
+              <text x="260" y="24" font-family="'Courier New', monospace" font-size="11" fill="#6b7280" text-anchor="middle" letter-spacing="2">DevTools — Console</text>
+
+              <line x1="0" y1="38" x2="520" y2="38" stroke="#d1d5db" stroke-width="1"/>
+              <rect x="0" y="38" width="520" height="28" fill="#f3f4f6"/>
+              <rect x="12" y="44" width="64" height="20" rx="4" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+              <text x="44" y="57" font-family="'Courier New', monospace" font-size="10" fill="#4f46e5" text-anchor="middle">Console</text>
+
+              <line x1="0" y1="66" x2="520" y2="66" stroke="#e5e7eb" stroke-width="1"/>
+
+              <text x="20" y="96" font-family="'Courier New', monospace" font-size="12" fill="#9ca3af">›</text>
+              <text x="34" y="96" font-family="'Courier New', monospace" font-size="12" fill="#2563eb">console</text>
+              <text x="102" y="96" font-family="'Courier New', monospace" font-size="12" fill="#374151">.</text>
+              <text x="108" y="96" font-family="'Courier New', monospace" font-size="12" fill="#059669">log</text>
+              <text x="132" y="96" font-family="'Courier New', monospace" font-size="12" fill="#374151">(</text>
+              <text x="140" y="96" font-family="'Courier New', monospace" font-size="12" fill="#b45309">'you moved the hay!'</text>
+              <text x="310" y="96" font-family="'Courier New', monospace" font-size="12" fill="#374151">)</text>
+
+              <line x1="12" y1="108" x2="508" y2="108" stroke="#e5e7eb" stroke-width="1"/>
+              <rect x="12" y="115" width="496" height="32" rx="4" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+              <text x="24" y="135" font-family="'Courier New', monospace" font-size="13" fill="#15803d" font-weight="bold">you moved the hay!</text>
+
+              <rect x="480" y="120" width="16" height="16" rx="2" fill="none" stroke="#86efac" stroke-width="1"/>
+              <text x="488" y="132" font-family="'Courier New', monospace" font-size="8" fill="#15803d" text-anchor="middle">i</text>
+
+              <text x="20" y="172" font-family="'Courier New', monospace" font-size="12" fill="#9ca3af">›</text>
+
+              <rect x="34" y="160" width="7" height="14" rx="1" fill="#2563eb" opacity="0.7">
+                <animate attributeName="opacity" values="0.7;0;0.7" dur="1.2s" repeatCount="indefinite"/>
+              </rect>
+
+              <rect y="196" width="520" height="24" fill="#f3f4f6"/>
+              <rect y="196" width="520" height="24" rx="12" fill="#f3f4f6"/>
+              <rect y="196" width="520" height="12" fill="#f3f4f6"/>
+              <line x1="0" y1="196" x2="520" y2="196" stroke="#e5e7eb" stroke-width="1"/>
+
+              <text x="20" y="212" font-family="'Courier New', monospace" font-size="9" fill="#9ca3af">1 message · 0 errors · 0 warnings</text>
+              <circle cx="490" cy="208" r="4" fill="#22c55e" opacity="0.8"/>
+              <text x="480" y="212" font-family="'Courier New', monospace" font-size="9" fill="#15803d" text-anchor="end">JS</text>
+            </svg>
+          </div>
+
           <!-- Naming callouts -->
           <div class="namingCallouts" id="namingCallouts" aria-hidden="true">
             <div class="callout callout--1">
@@ -732,15 +801,15 @@
     </div>
 
     <div class="track" id="track">
-  <section class="step step--intro" data-step="0" aria-label="Intro"></section>
-  <section class="step" data-step="1" aria-label="Section 2"></section>
-  <section class="step" data-step="2" aria-label="Section 3"></section>
-  <section class="step" data-step="3" aria-label="Section 4"></section>
-  <section class="step" data-step="4" aria-label="Section 5"></section>
-  <section class="step" data-step="5" aria-label="Section 6"></section>
-  <section class="step step--end" data-step="6" aria-label="Section 7"></section>
-  <section class="step step--outro-spacer" aria-hidden="true"></section>
-</div>
+      <section class="step step--intro" data-step="0" aria-label="Intro"></section>
+      <section class="step" data-step="1" aria-label="Section 2"></section>
+      <section class="step" data-step="2" aria-label="Section 3"></section>
+      <section class="step" data-step="3" aria-label="Section 4"></section>
+      <section class="step" data-step="4" aria-label="Section 5"></section>
+      <section class="step" data-step="5" aria-label="Section 6"></section>
+      <section class="step step--end" data-step="6" aria-label="Section 7"></section>
+      <section class="step step--outro-spacer" aria-hidden="true"></section>
+    </div>
   </main>
 
   <script src="js/main.js"></script>
