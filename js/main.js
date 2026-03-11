@@ -16,6 +16,10 @@ const codeBlock = document.getElementById("codeBlock");
 const bunnyIntro = document.getElementById("bunnyIntro");
 const bunnyStory = document.getElementById("bunnyStory");
 const bunnyFace = document.getElementById("bunnyFace");
+const faceEarLeftUp = document.getElementById("faceEarLeftUp");
+const faceEarLeftDown = document.getElementById("faceEarLeftDown");
+const faceEarRightUp = document.getElementById("faceEarRightUp");
+const faceEarRightDown = document.getElementById("faceEarRightDown");
 const hayWrap = document.getElementById("hayWrap");
 const haySingleGroup = document.getElementById("haySingleGroup");
 const bookshelfWrap = document.getElementById("bookshelfWrap");
@@ -30,14 +34,22 @@ const standEyeHi = document.getElementById("standEyeHi");
 const eyelidBlink = document.getElementById("eyelidBlink");
 
 const storyHeadGroup = document.querySelector("#bunnyStory #headGroup");
+const storyBunnyGroup = document.querySelector("#bunnyStory #bunnyGroup");
 const nearEarKick = document.getElementById("nearEarKick");
 const farEarKick = document.getElementById("farEarKick");
+const legBack = document.getElementById("legBack");
+const legFrontFarGroup = document.getElementById("legFrontFarGroup");
+const legFrontNearGroup = document.getElementById("legFrontNearGroup");
+const backPawKick = document.getElementById("backPawKick");
+const nose = document.getElementById("nose");
 
 const namingCallouts = document.getElementById("namingCallouts");
 const calloutEnergy = document.getElementById("calloutEnergy");
 const calloutHunger = document.getElementById("calloutHunger");
 const calloutMood = document.getElementById("calloutMood");
 const calloutSafe = document.getElementById("calloutSafe");
+const switchCallouts = document.getElementById("switchCallouts");
+const switchButtons = Array.from(document.querySelectorAll(".switchButton"));
 
 const introStep = document.querySelector(".step--intro");
 const steps = Array.from(document.querySelectorAll(".step[data-step]"));
@@ -45,6 +57,10 @@ const step2 = document.querySelector('.step[data-step="1"]');
 const firstContactStep = document.querySelector('.step[data-step="2"]');
 const namingThingsStep = document.querySelector('.step[data-step="3"]');
 const endStep = document.querySelector('.step[data-step="6"]');
+let namingEarState = "first";
+let activeSwitchAction = null;
+let switchResetTimer = null;
+let bunnyStoryHeadroomLocks = 0;
 
 /* ─── Story Content ──────────────────────────────────────────────────── */
 const STORY = [
@@ -136,7 +152,7 @@ function makeCodeLines() {
   ];
 
   const lines = [];
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 50; i++) {
     lines.push(...snippets, "", `// --- ${String(i + 1).padStart(2, "0")} ---`, "");
   }
   return lines.join("\n");
@@ -267,6 +283,38 @@ function showFaceBunny() {
   });
 }
 
+function resetFaceEars() {
+  const faceEars = [faceEarLeftUp, faceEarLeftDown, faceEarRightUp, faceEarRightDown].filter(Boolean);
+  gsap.killTweensOf(faceEars);
+  if (faceEarLeftUp) gsap.set(faceEarLeftUp, { opacity: 1 });
+  if (faceEarLeftDown) gsap.set(faceEarLeftDown, { opacity: 0 });
+  if (faceEarRightUp) gsap.set(faceEarRightUp, { opacity: 1 });
+  if (faceEarRightDown) gsap.set(faceEarRightDown, { opacity: 0 });
+
+  namingEarState = "first";
+}
+
+function setNamingEarPose(phase) {
+  if (!faceEarLeftUp || !faceEarLeftDown || !faceEarRightUp || !faceEarRightDown) return;
+  if (namingEarState === phase) return;
+
+  namingEarState = phase;
+
+  if (phase === "second") {
+    gsap.to(faceEarLeftUp, { opacity: 0, duration: 0.24, ease: "power2.out", overwrite: true });
+    gsap.to(faceEarLeftDown, { opacity: 1, duration: 0.24, ease: "power2.out", overwrite: true });
+    gsap.to(faceEarRightUp, { opacity: 0, duration: 0.24, ease: "power2.out", overwrite: true });
+    gsap.to(faceEarRightDown, { opacity: 1, duration: 0.24, ease: "power2.out", overwrite: true });
+
+    return;
+  }
+
+  gsap.to(faceEarLeftUp, { opacity: 1, duration: 0.24, ease: "power2.out", overwrite: true });
+  gsap.to(faceEarLeftDown, { opacity: 0, duration: 0.24, ease: "power2.out", overwrite: true });
+  gsap.to(faceEarRightUp, { opacity: 0, duration: 0.24, ease: "power2.out", overwrite: true });
+  gsap.to(faceEarRightDown, { opacity: 1, duration: 0.24, ease: "power2.out", overwrite: true });
+}
+
 /* ─── Hay helpers ────────────────────────────────────────────────────── */
 function hideHay() {
   if (!hayWrap) return;
@@ -329,14 +377,32 @@ function showConsoleBox() {
   );
 }
 
-function enableFirstContactHeadroom() {
+function lockBunnyStoryHeadroom() {
   if (!bunnyStory) return;
+  bunnyStoryHeadroomLocks += 1;
   bunnyStory.style.overflow = "visible";
 }
 
-function disableFirstContactHeadroom() {
+function unlockBunnyStoryHeadroom() {
   if (!bunnyStory) return;
-  bunnyStory.style.overflow = "";
+  bunnyStoryHeadroomLocks = Math.max(0, bunnyStoryHeadroomLocks - 1);
+  bunnyStory.style.overflow = bunnyStoryHeadroomLocks > 0 ? "visible" : "";
+}
+
+function enableFirstContactHeadroom() {
+  lockBunnyStoryHeadroom();
+}
+
+function disableFirstContactHeadroom() {
+  unlockBunnyStoryHeadroom();
+}
+
+function enableSwitchHeadroom() {
+  lockBunnyStoryHeadroom();
+}
+
+function disableSwitchHeadroom() {
+  unlockBunnyStoryHeadroom();
 }
 
 /* ─── Bookshelf helpers ──────────────────────────────────────────────── */
@@ -371,7 +437,7 @@ function showBookshelf() {
 /* ─── First Contact scrub animation ─────────────────────────────────── */
 let firstContactTL = null;
 
-function resetFirstContactAnimation() {
+function resetFirstContactAnimation({ preserveHeadroom = false } = {}) {
   if (firstContactTL) {
     firstContactTL.kill();
     firstContactTL = null;
@@ -409,7 +475,9 @@ function resetFirstContactAnimation() {
   }
 
   hideConsoleBox(true);
-  disableFirstContactHeadroom();
+  if (!preserveHeadroom) {
+    disableFirstContactHeadroom();
+  }
 }
 
 function initFirstContactAnimation() {
@@ -510,7 +578,7 @@ function initFirstContactAnimation() {
       disableFirstContactHeadroom();
     },
     onLeaveBack: () => {
-      resetFirstContactAnimation();
+      resetFirstContactAnimation({ preserveHeadroom: true });
     }
   });
 }
@@ -849,28 +917,330 @@ function showNamingCallouts() {
     ease: "power2.out",
     overwrite: true
   });
+
+  setNamingEarPose("first");
 }
 
 function updateNamingCallouts(progress) {
   if (!calloutEnergy || !calloutHunger || !calloutMood || !calloutSafe) return;
 
   if (progress < 0.5) {
+    setNamingEarPose("first");
     calloutEnergy.textContent = "38";
     calloutHunger.textContent = "58";
     calloutMood.textContent = `"curious"`;
     calloutSafe.textContent = "false";
   } else if (progress < 0.75) {
+    setNamingEarPose("second");
     calloutEnergy.textContent = "61";
     calloutHunger.textContent = "36";
     calloutMood.textContent = `"calm"`;
     calloutSafe.textContent = "true";
+  } else {
+    setNamingEarPose("second");
   }
+}
+
+function setActiveSwitchButton(action) {
+  switchButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.action === action);
+  });
+}
+
+function clearActiveSwitchButton() {
+  switchButtons.forEach((button) => button.classList.remove("is-active"));
+}
+
+function resetSwitchBunnyState() {
+  clearTimeout(switchResetTimer);
+  switchResetTimer = null;
+  activeSwitchAction = null;
+
+  clearActiveSwitchButton();
+
+  gsap.killTweensOf([
+    storyBunnyGroup,
+    legBack,
+    legFrontFarGroup,
+    legFrontNearGroup,
+    backPawKick,
+    nearEarKick,
+    farEarKick,
+    nose
+  ].filter(Boolean));
+
+  if (storyBunnyGroup) {
+    gsap.set(storyBunnyGroup, {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      rotation: 0,
+      transformBox: "fill-box",
+      transformOrigin: "50% 80%"
+    });
+  }
+
+  if (legBack) gsap.set(legBack, { rotation: 0, svgOrigin: "270 285" });
+  if (legFrontFarGroup) gsap.set(legFrontFarGroup, { rotation: 0, y: 0, svgOrigin: "165 305" });
+  if (legFrontNearGroup) gsap.set(legFrontNearGroup, { rotation: 0, y: 0, svgOrigin: "190 310" });
+  if (backPawKick) gsap.set(backPawKick, { attr: { transform: "" } });
+  if (nearEarKick) gsap.set(nearEarKick, { attr: { transform: "" }, rotation: 0, svgOrigin: "135 215" });
+  if (farEarKick) gsap.set(farEarKick, { attr: { transform: "" }, rotation: 0, svgOrigin: "115 200" });
+  if (nose) gsap.set(nose, { scaleX: 1, scaleY: 1, transformOrigin: "center center" });
+}
+
+function queueSwitchReset(delay = 0.2) {
+  clearTimeout(switchResetTimer);
+  switchResetTimer = setTimeout(resetSwitchBunnyState, delay * 1000);
+}
+
+function triggerSwitchHop() {
+  if (!storyBunnyGroup) return;
+
+  resetSwitchBunnyState();
+  activeSwitchAction = "hop";
+  setActiveSwitchButton("hop");
+
+  gsap.set(storyBunnyGroup, {
+    transformOrigin: "50% 100%",
+    transformBox: "fill-box"
+  });
+
+  gsap.timeline({
+    onComplete: () => queueSwitchReset(0.25)
+  })
+    .to(storyBunnyGroup, {
+      duration: 0.12,
+      y: 6,
+      scaleY: 0.92,
+      scaleX: 1.06,
+      ease: "power2.in"
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.22,
+      y: -28,
+      scaleY: 1.08,
+      scaleX: 0.96,
+      ease: "power2.out"
+    }, "<")
+    .to(storyBunnyGroup, {
+      duration: 0.25,
+      y: 0,
+      scaleY: 0.94,
+      scaleX: 1.05,
+      ease: "bounce.out"
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.1,
+      scaleX: 1,
+      scaleY: 1
+    });
+}
+
+function triggerSwitchHide() {
+  if (!storyBunnyGroup) return;
+
+  resetSwitchBunnyState();
+  activeSwitchAction = "hide";
+  setActiveSwitchButton("hide");
+
+  const step = 0.12;
+  const travel = 0.9;
+
+  gsap.set(legBack, { svgOrigin: "270 285" });
+  gsap.set(legFrontFarGroup, { svgOrigin: "165 305" });
+  gsap.set(legFrontNearGroup, { svgOrigin: "190 310" });
+  gsap.set(storyBunnyGroup, { transformBox: "fill-box", transformOrigin: "50% 80%" });
+
+  const tl = gsap.timeline({
+    onComplete: () => queueSwitchReset(0.25)
+  });
+
+  tl.to(nearEarKick, {
+    attr: { transform: "rotate(28 135 205) translate(3 2)" },
+    duration: 0.18,
+    ease: "power2.out"
+  }, 0)
+    .to(farEarKick, {
+      attr: { transform: "rotate(28 125 165) translate(3 2)" },
+      duration: 0.18,
+      ease: "power2.out"
+    }, 0)
+    .to(legBack, { rotation: -24, duration: step, ease: "sine.inOut" }, 0)
+    .to(legFrontFarGroup, { rotation: 10, y: -2, duration: step, ease: "sine.inOut" }, 0)
+    .to(legFrontNearGroup, { rotation: -16, y: -1, duration: step, ease: "sine.inOut" }, 0)
+    .to(backPawKick, { attr: { transform: "rotate(-10 285 332) translate(0 -2)" }, duration: step, ease: "sine.inOut" }, 0)
+    .to(storyBunnyGroup, { x: -260, duration: travel, ease: "power1.in" }, 0.05)
+    .to(storyBunnyGroup, { y: -4, duration: step, ease: "sine.inOut" }, 0)
+    .to(storyBunnyGroup, { y: 0, duration: step, ease: "sine.inOut" }, step)
+    .to(legBack, { rotation: 24, duration: step, ease: "sine.inOut" }, step)
+    .to(legFrontFarGroup, { rotation: -10, y: 0, duration: step, ease: "sine.inOut" }, step)
+    .to(legFrontNearGroup, { rotation: 16, y: 0, duration: step, ease: "sine.inOut" }, step)
+    .to(backPawKick, { attr: { transform: "rotate(10 285 332) translate(0 0)" }, duration: step, ease: "sine.inOut" }, step)
+    .to(legBack, { rotation: -24, duration: step, ease: "sine.inOut" }, step * 2)
+    .to(legFrontFarGroup, { rotation: 10, y: -2, duration: step, ease: "sine.inOut" }, step * 2)
+    .to(legFrontNearGroup, { rotation: -16, y: -1, duration: step, ease: "sine.inOut" }, step * 2)
+    .to(backPawKick, { attr: { transform: "rotate(-10 285 332) translate(0 -2)" }, duration: step, ease: "sine.inOut" }, step * 2)
+    .to(legBack, { rotation: 24, duration: step, ease: "sine.inOut" }, step * 3)
+    .to(legFrontFarGroup, { rotation: -10, y: 0, duration: step, ease: "sine.inOut" }, step * 3)
+    .to(legFrontNearGroup, { rotation: 16, y: 0, duration: step, ease: "sine.inOut" }, step * 3)
+    .to(backPawKick, { attr: { transform: "rotate(10 285 332) translate(0 0)" }, duration: step, ease: "sine.inOut" }, step * 3)
+    .to(storyBunnyGroup, { x: -320, opacity: 0, duration: 0.12, ease: "power1.in" }, 0.78)
+    .set(storyBunnyGroup, { x: 420, y: 0, opacity: 0 })
+    .to(storyBunnyGroup, { opacity: 1, x: 0, duration: 0.32, ease: "power2.out" })
+    .to(nearEarKick, {
+      attr: { transform: "" },
+      duration: 0.22,
+      ease: "power2.out"
+    }, "<")
+    .to(farEarKick, {
+      attr: { transform: "" },
+      duration: 0.22,
+      ease: "power2.out"
+    }, "<");
+}
+
+function triggerSwitchStay() {
+  resetSwitchBunnyState();
+  activeSwitchAction = "stay";
+  setActiveSwitchButton("stay");
+
+  gsap.timeline({
+    onComplete: () => queueSwitchReset(0.35)
+  })
+    .to(nearEarKick, {
+      rotation: -28,
+      svgOrigin: "135 215",
+      duration: 0.18,
+      ease: "power3.out"
+    }, 0)
+    .to(farEarKick, {
+      rotation: 22,
+      svgOrigin: "115 200",
+      duration: 0.18,
+      ease: "power3.out"
+    }, 0.05)
+    .to(nearEarKick, {
+      rotation: -18,
+      svgOrigin: "135 215",
+      duration: 0.12,
+      ease: "power2.inOut"
+    }, 0.28)
+    .to(farEarKick, {
+      rotation: 14,
+      svgOrigin: "115 200",
+      duration: 0.12,
+      ease: "power2.inOut"
+    }, 0.32)
+    .to(nearEarKick, {
+      rotation: 0,
+      svgOrigin: "135 215",
+      duration: 0.7,
+      ease: "elastic.out(1.2, 0.45)"
+    }, 0.48)
+    .to(farEarKick, {
+      rotation: 0,
+      svgOrigin: "115 200",
+      duration: 0.7,
+      ease: "elastic.out(1.2, 0.45)"
+    }, 0.52)
+    .to(nose, {
+      scaleY: 1.2,
+      transformOrigin: "center center",
+      duration: 0.1,
+      yoyo: true,
+      repeat: 3,
+      ease: "sine.inOut"
+    }, 0.1);
+}
+
+function bindSwitchButtons() {
+  switchButtons.forEach((button) => {
+    if (button.dataset.bound === "true") return;
+
+    button.dataset.bound = "true";
+    button.addEventListener("click", () => {
+      const action = button.dataset.action;
+      if (!action) return;
+
+      if (action === "hop") {
+        triggerSwitchHop();
+      } else if (action === "hide") {
+        triggerSwitchHide();
+      } else if (action === "stay") {
+        triggerSwitchStay();
+      }
+    });
+  });
+}
+
+function hideSwitchCallouts() {
+  if (!switchCallouts) return;
+
+  const items = switchCallouts.querySelectorAll(".switchCallout");
+  gsap.killTweensOf([switchCallouts, ...items]);
+
+  gsap.to(items, {
+    opacity: 0,
+    y: 8,
+    scale: 0.98,
+    duration: 0.2,
+    stagger: 0.03,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to(switchCallouts, {
+    opacity: 0,
+    duration: 0.2,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(switchCallouts, { visibility: "hidden" });
+      resetSwitchBunnyState();
+      disableSwitchHeadroom();
+    }
+  });
+}
+
+function showSwitchCallouts() {
+  if (!switchCallouts) return;
+  enableSwitchHeadroom();
+
+  const items = switchCallouts.querySelectorAll(".switchCallout");
+  gsap.killTweensOf([switchCallouts, ...items]);
+
+  gsap.set(switchCallouts, { visibility: "visible" });
+  gsap.set(items, { opacity: 0, y: 8, scale: 0.98 });
+
+  gsap.to(switchCallouts, {
+    opacity: 1,
+    duration: 0.2,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to(items, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.3,
+    stagger: 0.06,
+    ease: "power2.out",
+    overwrite: true
+  });
 }
 
 function setup() {
   ScrollTrigger.getAll().forEach((st) => st.kill());
   resetEndAnimation();
   resetFirstContactAnimation();
+  resetSwitchBunnyState();
+  bunnyStoryHeadroomLocks = 0;
+  disableSwitchHeadroom();
+  bindSwitchButtons();
 
   initCodeLayer();
 
@@ -880,6 +1250,7 @@ function setup() {
   gsap.set(bunnyIntro, { opacity: 1, visibility: "visible" });
   gsap.set(bunnyStory, { opacity: 0, visibility: "hidden" });
   if (bunnyFace) gsap.set(bunnyFace, { opacity: 0, visibility: "hidden" });
+  resetFaceEars();
   if (hayWrap) gsap.set(hayWrap, { opacity: 0, visibility: "hidden", y: 12, rotation: -4 });
   if (haySingleGroup) gsap.set(haySingleGroup, { x: 0, rotation: 0, transformOrigin: "0% 50%" });
   if (bookshelfWrap) {
@@ -929,6 +1300,15 @@ function setup() {
   if (namingCallouts) {
     gsap.set(namingCallouts, { opacity: 0, visibility: "hidden" });
     gsap.set(namingCallouts.querySelectorAll(".callout"), {
+      opacity: 0,
+      y: 8,
+      scale: 0.98
+    });
+  }
+
+  if (switchCallouts) {
+    gsap.set(switchCallouts, { opacity: 0, visibility: "hidden" });
+    gsap.set(switchCallouts.querySelectorAll(".switchCallout"), {
       opacity: 0,
       y: 8,
       scale: 0.98
@@ -998,6 +1378,7 @@ function setup() {
           hideHay();
           hideConsoleBox(true);
           hideNamingCallouts();
+          hideSwitchCallouts();
           hideBookshelf();
           hideEndBall();
           return;
@@ -1016,8 +1397,10 @@ function setup() {
 
         if (idx === 2) {
           showHay();
+          enableFirstContactHeadroom();
         } else {
           hideHay();
+          disableFirstContactHeadroom();
         }
 
         if (idx !== 2) {
@@ -1028,6 +1411,12 @@ function setup() {
           showNamingCallouts();
         } else {
           hideNamingCallouts();
+        }
+
+        if (idx === 4) {
+          showSwitchCallouts();
+        } else {
+          hideSwitchCallouts();
         }
 
         if (idx === 4) {
@@ -1049,6 +1438,7 @@ function setup() {
           hideHay();
           hideConsoleBox(true);
           hideNamingCallouts();
+          hideSwitchCallouts();
           hideBookshelf();
           hideEndBall();
           return;
@@ -1067,8 +1457,10 @@ function setup() {
 
         if (idx === 2) {
           showHay();
+          enableFirstContactHeadroom();
         } else {
           hideHay();
+          disableFirstContactHeadroom();
         }
 
         if (idx !== 2) {
@@ -1079,6 +1471,12 @@ function setup() {
           showNamingCallouts();
         } else {
           hideNamingCallouts();
+        }
+
+        if (idx === 4) {
+          showSwitchCallouts();
+        } else {
+          hideSwitchCallouts();
         }
 
         if (idx === 4) {
@@ -1109,11 +1507,11 @@ function setup() {
     });
 
     gsap.to(codeBlock, {
-      y: -1100,
+      y: -1800,
       ease: "none",
       scrollTrigger: {
         trigger: step2,
-        start: "top bottom",
+        start: "top 60%",
         end: "bottom top",
         scrub: true
       }

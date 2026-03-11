@@ -629,14 +629,24 @@
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              <g class="ear-left">
-                <ellipse cx="140" cy="120" rx="35" ry="80" fill="#8B6F47" transform="rotate(-15 140 120)" />
-                <ellipse cx="140" cy="120" rx="22" ry="65" fill="#A0826D" transform="rotate(-15 140 120)" />
+              <g class="ear-left" id="faceEarLeftUp">
+                <ellipse cx="140" cy="118" rx="38" ry="86" fill="#8B6F47" transform="rotate(-15 140 118)" />
+                <ellipse cx="140" cy="118" rx="24" ry="70" fill="#A0826D" transform="rotate(-15 140 118)" />
               </g>
 
-              <g class="ear-right">
-                <ellipse cx="260" cy="120" rx="35" ry="80" fill="#8B6F47" transform="rotate(15 260 120)" />
-                <ellipse cx="260" cy="120" rx="22" ry="65" fill="#A0826D" transform="rotate(15 260 120)" />
+              <g class="ear-left" id="faceEarLeftDown" opacity="0">
+                <ellipse cx="118" cy="170" rx="76" ry="26" fill="#8B6F47" transform="rotate(-46 118 170)" />
+                <ellipse cx="118" cy="170" rx="58" ry="16" fill="#A0826D" transform="rotate(-46 118 170)" />
+              </g>
+
+              <g class="ear-right" id="faceEarRightUp">
+                <ellipse cx="260" cy="118" rx="38" ry="86" fill="#8B6F47" transform="rotate(15 260 118)" />
+                <ellipse cx="260" cy="118" rx="24" ry="70" fill="#A0826D" transform="rotate(15 260 118)" />
+              </g>
+
+              <g class="ear-right" id="faceEarRightDown" opacity="0">
+                <ellipse cx="282" cy="170" rx="76" ry="26" fill="#8B6F47" transform="rotate(46 282 170)" />
+                <ellipse cx="282" cy="170" rx="58" ry="16" fill="#A0826D" transform="rotate(46 282 170)" />
               </g>
 
               <ellipse cx="200" cy="220" rx="85" ry="95" fill="#8B6F47"/>
@@ -790,6 +800,20 @@
               <span class="calloutValue"><span class="calloutPrefix">let</span> safe = <span id="calloutSafe">false</span>;</span>
             </div>
           </div>
+
+          <div class="switchCallouts" id="switchCallouts" aria-hidden="true">
+            <button class="callout switchCallout switchButton switchCallout--1" type="button" data-action="hop">
+              <span class="calloutValue"><span class="calloutPrefix">if</span> carrot <span class="calloutArrow">-&gt;</span> hop</span>
+            </button>
+
+            <button class="callout switchCallout switchButton switchCallout--2" type="button" data-action="hide">
+              <span class="calloutValue"><span class="calloutPrefix">if</span> loud noise <span class="calloutArrow">-&gt;</span> hide</span>
+            </button>
+
+            <button class="callout switchCallout switchButton switchCallout--3" type="button" data-action="stay">
+              <span class="calloutValue"><span class="calloutPrefix">if</span> talking <span class="calloutArrow">-&gt;</span> stay</span>
+            </button>
+          </div>
         </div>
 
         <div class="captionArea" id="captionArea" aria-live="polite">
@@ -802,7 +826,7 @@
 
     <div class="track" id="track">
       <section class="step step--intro" data-step="0" aria-label="Intro"></section>
-      <section class="step" data-step="1" aria-label="Section 2"></section>
+      <section class="step step--arrival" data-step="1" aria-label="Section 2"></section>
       <section class="step" data-step="2" aria-label="Section 3"></section>
       <section class="step" data-step="3" aria-label="Section 4"></section>
       <section class="step" data-step="4" aria-label="Section 5"></section>

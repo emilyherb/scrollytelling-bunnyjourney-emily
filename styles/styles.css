@@ -158,7 +158,7 @@ body {
 .codeBlock {
   margin: 0;
   width: min(760px, 86vw);
-  height: min(56vh, 520px);
+  height: min(84vh, 820px);
   padding: 22px 26px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 14px;
@@ -413,10 +413,55 @@ body {
   font-style: italic;
 }
 
+.calloutArrow {
+  color: rgba(0,0,0,.5);
+}
+
 .callout--1 { left: 10%; top: 20%; }
 .callout--2 { right: 8%; top: 24%; }
 .callout--3 { left: 8%; bottom: 24%; }
 .callout--4 { right: 12%; bottom: 18%; }
+
+.switchCallouts {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.switchCallout {
+  min-width: 180px;
+  background: rgba(241, 241, 241, 0.72);
+  pointer-events: auto;
+  appearance: none;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  font: inherit;
+}
+
+.switchCallout--1 { left: -2%; top: 16%; }
+.switchCallout--2 { left: -4%; top: 39%; }
+.switchCallout--3 { left: 2%; top: 62%; }
+
+.switchCallout:hover {
+  transform: translateY(4px) scale(1.02);
+  box-shadow: 0 14px 28px rgba(0,0,0,.12);
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.switchCallout:focus-visible {
+  outline: 2px solid rgba(0, 108, 63, 0.38);
+  outline-offset: 3px;
+}
+
+.switchCallout.is-active {
+  background: rgba(216, 154, 127, 0.18);
+  border-color: rgba(216, 154, 127, 0.42);
+  box-shadow: 0 14px 28px rgba(0,0,0,.12);
+}
 
 /* ─── Caption Area ───────────────────────────────────────────────────── */
 .captionArea {
@@ -462,6 +507,7 @@ body {
 .track { position: relative; z-index: 1; }
 .step { height: 100vh; }
 .step--intro { height: 300vh; }
+.step--arrival { height: 150vh; }
 
 .sticky-scene::after {
   content: "";
@@ -498,6 +544,14 @@ body {
   .callout--3 { left: 2%; bottom: 24%; }
   .callout--4 { right: 2%; bottom: 17%; }
 
+  .switchCallout {
+    min-width: 156px;
+  }
+
+  .switchCallout--1 { left: -4%; top: 20%; }
+  .switchCallout--2 { left: -6%; top: 42%; }
+  .switchCallout--3 { left: -1%; top: 63%; }
+
   .endBallWrap {
     width: min(120px, 22vw);
     left: 10%;
@@ -519,6 +573,10 @@ body {
   .calloutValue {
     font-size: 13px;
   }
+
+  .switchCallout--1 { left: -8%; top: 22%; }
+  .switchCallout--2 { left: -9%; top: 44%; }
+  .switchCallout--3 { left: -4%; top: 64%; }
 
   .endBallWrap {
     width: min(100px, 24vw);
