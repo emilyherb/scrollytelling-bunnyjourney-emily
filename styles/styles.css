@@ -38,6 +38,17 @@
   --muted: rgba(43, 43, 43, 0.7);
 }
 
+.mode-1.dark {
+  --grey-00: #ffffff;
+  --grey-10: #23201d;
+  --grey-20: #171412;
+  --grey-90: #ffffff;
+  --orange-50: #e0a386;
+  --green-50: #68a87d;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+  --muted: rgba(255, 255, 255, 0.72);
+}
+
 /* ─── Reset & Base ───────────────────────────────────────────────────── */
 *,
 *::before,
@@ -82,13 +93,69 @@ body {
   row-gap: var(--s);
 }
 
+.themeToggle {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-top: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--secondary-90) 12%, transparent);
+  background: color-mix(in srgb, var(--primary-10) 86%, transparent);
+  color: var(--secondary-90);
+  font: inherit;
+  font-size: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  position: fixed;
+  left: auto;
+  right: 4px;
+  top: 3%;
+  z-index: 50;
+  transform: translateX(300px);
+}
+
+.themeToggle:hover {
+  transform: translateX(300px) translateY(-1px);
+  background: color-mix(in srgb, var(--secondary-00) 92%, transparent);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
+}
+
+.themeToggle:focus-visible {
+  outline: 2px solid rgba(0, 108, 63, 0.38);
+  outline-offset: 3px;
+}
+
+.themeIcon {
+  grid-area: 1 / 1;
+  line-height: 1;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.themeIcon--moon {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.mode-1.dark .themeIcon--sun {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.mode-1.dark .themeIcon--moon {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .frame::before {
   content: "";
   position: absolute;
   inset: 14px;
   border-radius: var(--radius);
-  background: rgba(241, 241, 241, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.07);
+  background: color-mix(in srgb, var(--primary-10) 78%, transparent);
+  border: 1px solid color-mix(in srgb, var(--secondary-90) 10%, transparent);
   box-shadow: var(--shadow);
 }
 
@@ -163,9 +230,9 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 14px;
   line-height: 1.65;
-  color: rgba(43,43,43,.58);
+  color: color-mix(in srgb, var(--secondary-90) 58%, transparent);
   white-space: pre;
-  text-shadow: 0 1px 0 rgba(255,255,255,.28);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--secondary-00) 28%, transparent);
   letter-spacing: .01em;
   background: transparent;
   border: none;
@@ -294,8 +361,8 @@ body {
 /* ─── Bookshelf ──────────────────────────────────────────────────────── */
 .bookshelfWrap {
   position: absolute;
-  left: 80%;
-  top: 30%;
+  left: 120%;
+  top: 34%;
   width: min(340px, 44vw);
   opacity: 0;
   visibility: hidden;
@@ -359,6 +426,10 @@ body {
   width: min(520px, 80vw);
 }
 
+.title-text .themeToggle {
+  pointer-events: auto;
+}
+
 #titleH1 {
   font-family: var(--font-display);
   font-size: clamp(var(--text-size-xl), 6vw, var(--text-size-xxxl));
@@ -393,8 +464,8 @@ body {
   min-width: 140px;
   padding: 10px 12px;
   border-radius: 14px;
-  background: rgba(241, 241, 241, 0.62);
-  border: 1px solid rgba(0,0,0,.08);
+  background: color-mix(in srgb, var(--primary-10) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--secondary-90) 8%, transparent);
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 24px rgba(0,0,0,.08);
   opacity: 0;
@@ -404,17 +475,17 @@ body {
 .calloutValue {
   font-size: 16px;
   line-height: 1.2;
-  color: rgba(0,0,0,.88);
+  color: color-mix(in srgb, var(--secondary-90) 88%, transparent);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .calloutPrefix {
-  color: rgba(43,43,43,.52);
+  color: color-mix(in srgb, var(--secondary-90) 52%, transparent);
   font-style: italic;
 }
 
 .calloutArrow {
-  color: rgba(0,0,0,.5);
+  color: color-mix(in srgb, var(--secondary-90) 50%, transparent);
 }
 
 .callout--1 { left: 10%; top: 20%; }
@@ -433,7 +504,7 @@ body {
 
 .switchCallout {
   min-width: 180px;
-  background: rgba(241, 241, 241, 0.72);
+  background: color-mix(in srgb, var(--primary-10) 72%, transparent);
   pointer-events: auto;
   appearance: none;
   text-align: left;
@@ -449,7 +520,7 @@ body {
 .switchCallout:hover {
   transform: translateY(4px) scale(1.02);
   box-shadow: 0 14px 28px rgba(0,0,0,.12);
-  background: rgba(255, 255, 255, 0.84);
+  background: color-mix(in srgb, var(--secondary-00) 84%, transparent);
 }
 
 .switchCallout:focus-visible {
@@ -470,8 +541,8 @@ body {
   width: min(900px, 92vw);
   padding: var(--s) var(--s) var(--m);
   border-radius: var(--s);
-  background: rgba(241,241,241,.70);
-  border: 1px solid rgba(0,0,0,.07);
+  background: color-mix(in srgb, var(--primary-10) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--secondary-90) 7%, transparent);
   backdrop-filter: blur(10px);
   overflow: hidden;
   opacity: 0;
@@ -491,7 +562,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(var(--text-size-m), 3.2vw, var(--text-size-l));
   line-height: 1.15;
-  color: rgba(0,0,0,.88);
+  color: color-mix(in srgb, var(--secondary-90) 88%, transparent);
   text-align: left;
 }
 
@@ -503,11 +574,41 @@ body {
   text-align: left;
 }
 
+.restartButton {
+  margin-top: var(--m);
+  padding: 12px 18px;
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  color: var(--secondary-90);
+  font: inherit;
+  font-size: 14px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.restartButton:hover {
+  transform: translateY(6px);
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 10px 24px rgba(0,0,0,.10);
+}
+
+.restartButton:focus-visible {
+  outline: 2px solid rgba(0, 108, 63, 0.38);
+  outline-offset: 3px;
+}
+
 /* ─── Scroll Track ───────────────────────────────────────────────────── */
 .track { position: relative; z-index: 1; }
 .step { height: 100vh; }
 .step--intro { height: 300vh; }
 .step--arrival { height: 150vh; }
+.step--first-contact { height: 180vh; }
 
 .sticky-scene::after {
   content: "";

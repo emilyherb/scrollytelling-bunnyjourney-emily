@@ -2,13 +2,16 @@
 gsap.registerPlugin(ScrollTrigger);
 
 const wrap = document.getElementById("bunnyWrap");
+const rootEl = document.documentElement;
 const titleH1 = document.getElementById("titleH1");
 const titleSub = document.getElementById("titleSub");
+const themeToggle = document.getElementById("themeToggle");
 
 const captionArea = document.getElementById("captionArea");
 const captionKicker = document.getElementById("captionKicker");
 const captionText = document.getElementById("captionText");
 const captionSmall = document.getElementById("captionSmall");
+const restartButton = document.getElementById("restartButton");
 
 const codeLayer = document.getElementById("codeLayer");
 const codeBlock = document.getElementById("codeBlock");
@@ -35,6 +38,8 @@ const eyelidBlink = document.getElementById("eyelidBlink");
 
 const storyHeadGroup = document.querySelector("#bunnyStory #headGroup");
 const storyBunnyGroup = document.querySelector("#bunnyStory #bunnyGroup");
+const firstContactBridge = document.getElementById("firstContactBridge");
+const firstContactBridgeShade = document.getElementById("firstContactBridgeShade");
 const nearEarKick = document.getElementById("nearEarKick");
 const farEarKick = document.getElementById("farEarKick");
 const legBack = document.getElementById("legBack");
@@ -60,7 +65,10 @@ const endStep = document.querySelector('.step[data-step="6"]');
 let namingEarState = "first";
 let activeSwitchAction = null;
 let switchResetTimer = null;
+let switchActionTL = null;
 let bunnyStoryHeadroomLocks = 0;
+let restartBound = false;
+let themeToggleBound = false;
 
 /* ─── Story Content ──────────────────────────────────────────────────── */
 const STORY = [
@@ -205,6 +213,71 @@ function setCaption(index, { animate = true } = {}) {
     { y: 6, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.35, ease: "power2.out", stagger: 0.03 }
   );
+}
+
+function applyTheme(theme) {
+  const nextTheme = theme === "dark" ? "dark" : "light";
+  rootEl.classList.toggle("dark", nextTheme === "dark");
+  rootEl.classList.toggle("light", nextTheme === "light");
+
+  if (themeToggle) {
+    themeToggle.setAttribute(
+      "aria-label",
+      nextTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+    );
+  }
+
+  window.localStorage.setItem("bunny-theme", nextTheme);
+}
+
+function bindThemeToggle() {
+  if (!themeToggle || themeToggleBound) return;
+
+  themeToggleBound = true;
+  applyTheme(window.localStorage.getItem("bunny-theme") || "light");
+
+  themeToggle.addEventListener("click", () => {
+    applyTheme(rootEl.classList.contains("dark") ? "light" : "dark");
+  });
+}
+
+function showRestartButton() {
+  if (!restartButton) return;
+
+  gsap.killTweensOf(restartButton);
+  gsap.set(restartButton, { visibility: "visible" });
+  gsap.to(restartButton, {
+    opacity: 1,
+    y: 0,
+    duration: 0.25,
+    ease: "power2.out",
+    overwrite: true
+  });
+}
+
+function hideRestartButton() {
+  if (!restartButton) return;
+
+  gsap.killTweensOf(restartButton);
+  gsap.to(restartButton, {
+    opacity: 0,
+    y: 8,
+    duration: 0.2,
+    ease: "power2.out",
+    overwrite: true,
+    onStart: () => gsap.set(restartButton, { visibility: "visible" }),
+    onComplete: () => gsap.set(restartButton, { visibility: "hidden" })
+  });
+}
+
+function bindRestartButton() {
+  if (!restartButton || restartBound) return;
+
+  restartBound = true;
+  restartButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.setTimeout(() => window.location.reload(), 700);
+  });
 }
 
 /* ─── Bunny state helpers ────────────────────────────────────────────── */
@@ -437,10 +510,14 @@ function showBookshelf() {
 /* ─── First Contact scrub animation ─────────────────────────────────── */
 let firstContactTL = null;
 
-function resetFirstContactAnimation({ preserveHeadroom = false } = {}) {
-  if (firstContactTL) {
+function resetFirstContactAnimation({ preserveHeadroom = false, killTimeline = true } = {}) {
+  if (firstContactTL && killTimeline) {
     firstContactTL.kill();
     firstContactTL = null;
+  }
+
+  if (firstContactTL && !killTimeline) {
+    firstContactTL.pause(0);
   }
 
   if (storyHeadGroup) {
@@ -474,6 +551,14 @@ function resetFirstContactAnimation({ preserveHeadroom = false } = {}) {
     });
   }
 
+  if (firstContactBridge) {
+    gsap.set(firstContactBridge, { opacity: 0 });
+  }
+
+  if (firstContactBridgeShade) {
+    gsap.set(firstContactBridgeShade, { opacity: 0 });
+  }
+
   hideConsoleBox(true);
   if (!preserveHeadroom) {
     disableFirstContactHeadroom();
@@ -488,10 +573,14 @@ function initFirstContactAnimation() {
   firstContactTL = gsap.timeline({ paused: true });
 
   firstContactTL
+    .set([firstContactBridge, firstContactBridgeShade].filter(Boolean), {
+      opacity: (_, target) => (target === firstContactBridgeShade ? 0.78 : 1)
+    }, 0)
+
     .to(storyHeadGroup, {
       duration: 0.38,
       x: -16,
-      y: 60,
+      y: 34,
       rotation: -30,
       transformOrigin: "50% 80%",
       ease: "power2.in"
@@ -500,7 +589,7 @@ function initFirstContactAnimation() {
     .to(storyHeadGroup, {
       duration: 0.07,
       x: -22,
-      y: 65,
+      y: 39,
       ease: "none"
     })
 
@@ -549,6 +638,12 @@ function initFirstContactAnimation() {
       duration: 0.5,
       rotation: 0,
       ease: "elastic.out(1, 0.4)"
+    }, "<+0.1")
+
+    .to([firstContactBridge, firstContactBridgeShade].filter(Boolean), {
+      duration: 0.12,
+      opacity: 0,
+      ease: "power1.out"
     }, "<+0.1");
 
   const HAY_MOVED_THRESHOLD = 0.48;
@@ -578,19 +673,65 @@ function initFirstContactAnimation() {
       disableFirstContactHeadroom();
     },
     onLeaveBack: () => {
-      resetFirstContactAnimation({ preserveHeadroom: true });
+      resetFirstContactAnimation({ preserveHeadroom: true, killTimeline: false });
     }
   });
 }
 
 /* ─── End pose helpers ──────────────────────────────────────────────── */
 let endBallTL = null;
+let endBreathingTL = null;
+
+function stopEndBreathing({ resetPose = false } = {}) {
+  const wasBreathing = Boolean(endBreathingTL);
+
+  if (endBreathingTL) {
+    endBreathingTL.kill();
+    endBreathingTL = null;
+  }
+
+  if (!bunnyStory || (!wasBreathing && !resetPose)) return;
+
+  gsap.killTweensOf(bunnyStory);
+  gsap.set(bunnyStory, {
+    y: 0,
+    scaleX: 1,
+    scaleY: 1,
+    transformOrigin: "50% 50%"
+  });
+}
+
+function startEndBreathing() {
+  if (!bunnyStory || endBreathingTL) return;
+
+  gsap.set(bunnyStory, {
+    transformOrigin: "50% 50%"
+  });
+
+  endBreathingTL = gsap.timeline({ repeat: -1, yoyo: true })
+    .to(bunnyStory, {
+      y: 3,
+      scaleX: 1.01,
+      scaleY: 0.985,
+      duration: 1.8,
+      ease: "sine.inOut"
+    })
+    .to(bunnyStory, {
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      duration: 1.8,
+      ease: "sine.inOut"
+    });
+}
 
 function resetEndAnimation() {
   if (endBallTL) {
     endBallTL.kill();
     endBallTL = null;
   }
+
+  stopEndBreathing({ resetPose: true });
 
   if (!endBallWrap || !ballGroup || !bunnyStory) return;
 
@@ -720,16 +861,20 @@ function initEndScrollAnimation() {
       onEnter: () => {
         showStorySideBunny();
         showEndBall();
+        stopEndBreathing({ resetPose: true });
       },
       onEnterBack: () => {
         showStorySideBunny();
         showEndBall();
+        stopEndBreathing({ resetPose: true });
       },
       onLeave: () => {
         hideEndBall();
+        stopEndBreathing({ resetPose: true });
       },
       onLeaveBack: () => {
         hideEndBall();
+        stopEndBreathing({ resetPose: true });
       }
     }
   });
@@ -864,6 +1009,22 @@ function initEndScrollAnimation() {
       duration: 0.06,
       ease: "none"
     }, 0.96);
+
+  endBallTL.scrollTrigger?.vars && ScrollTrigger.create({
+    trigger: endStep,
+    start: "top center",
+    end: "bottom center",
+    scrub: 1,
+    onUpdate: (self) => {
+      if (self.progress >= 0.965) {
+        startEndBreathing();
+      } else {
+        stopEndBreathing();
+      }
+    },
+    onLeave: () => startEndBreathing(),
+    onLeaveBack: () => stopEndBreathing({ resetPose: true })
+  });
 }
 
 /* ─── Naming Things callouts ────────────────────────────────────────── */
@@ -958,16 +1119,10 @@ function resetSwitchBunnyState() {
 
   clearActiveSwitchButton();
 
-  gsap.killTweensOf([
-    storyBunnyGroup,
-    legBack,
-    legFrontFarGroup,
-    legFrontNearGroup,
-    backPawKick,
-    nearEarKick,
-    farEarKick,
-    nose
-  ].filter(Boolean));
+  if (switchActionTL) {
+    switchActionTL.kill();
+    switchActionTL = null;
+  }
 
   if (storyBunnyGroup) {
     gsap.set(storyBunnyGroup, {
@@ -982,9 +1137,14 @@ function resetSwitchBunnyState() {
     });
   }
 
+  if (bookshelfWrap) {
+    gsap.set(bookshelfWrap, { zIndex: 2 });
+  }
+
   if (legBack) gsap.set(legBack, { rotation: 0, svgOrigin: "270 285" });
   if (legFrontFarGroup) gsap.set(legFrontFarGroup, { rotation: 0, y: 0, svgOrigin: "165 305" });
   if (legFrontNearGroup) gsap.set(legFrontNearGroup, { rotation: 0, y: 0, svgOrigin: "190 310" });
+  if (storyHeadGroup) gsap.set(storyHeadGroup, { x: 0, y: 0, rotation: 0, transformOrigin: "50% 80%" });
   if (backPawKick) gsap.set(backPawKick, { attr: { transform: "" } });
   if (nearEarKick) gsap.set(nearEarKick, { attr: { transform: "" }, rotation: 0, svgOrigin: "135 215" });
   if (farEarKick) gsap.set(farEarKick, { attr: { transform: "" }, rotation: 0, svgOrigin: "115 200" });
@@ -1008,7 +1168,7 @@ function triggerSwitchHop() {
     transformBox: "fill-box"
   });
 
-  gsap.timeline({
+  switchActionTL = gsap.timeline({
     onComplete: () => queueSwitchReset(0.25)
   })
     .to(storyBunnyGroup, {
@@ -1047,18 +1207,20 @@ function triggerSwitchHide() {
   setActiveSwitchButton("hide");
 
   const step = 0.12;
-  const travel = 0.9;
+  const runOutTravel = 0.64;
+  const returnTravel = 0.42;
 
   gsap.set(legBack, { svgOrigin: "270 285" });
   gsap.set(legFrontFarGroup, { svgOrigin: "165 305" });
   gsap.set(legFrontNearGroup, { svgOrigin: "190 310" });
   gsap.set(storyBunnyGroup, { transformBox: "fill-box", transformOrigin: "50% 80%" });
+  if (bookshelfWrap) gsap.set(bookshelfWrap, { zIndex: 2 });
 
-  const tl = gsap.timeline({
+  switchActionTL = gsap.timeline({
     onComplete: () => queueSwitchReset(0.25)
   });
 
-  tl.to(nearEarKick, {
+  switchActionTL.to(nearEarKick, {
     attr: { transform: "rotate(28 135 205) translate(3 2)" },
     duration: 0.18,
     ease: "power2.out"
@@ -1072,7 +1234,7 @@ function triggerSwitchHide() {
     .to(legFrontFarGroup, { rotation: 10, y: -2, duration: step, ease: "sine.inOut" }, 0)
     .to(legFrontNearGroup, { rotation: -16, y: -1, duration: step, ease: "sine.inOut" }, 0)
     .to(backPawKick, { attr: { transform: "rotate(-10 285 332) translate(0 -2)" }, duration: step, ease: "sine.inOut" }, 0)
-    .to(storyBunnyGroup, { x: -260, duration: travel, ease: "power1.in" }, 0.05)
+    .to(storyBunnyGroup, { x: -260, duration: runOutTravel, ease: "power1.in" }, 0.05)
     .to(storyBunnyGroup, { y: -4, duration: step, ease: "sine.inOut" }, 0)
     .to(storyBunnyGroup, { y: 0, duration: step, ease: "sine.inOut" }, step)
     .to(legBack, { rotation: 24, duration: step, ease: "sine.inOut" }, step)
@@ -1088,8 +1250,43 @@ function triggerSwitchHide() {
     .to(legFrontNearGroup, { rotation: 16, y: 0, duration: step, ease: "sine.inOut" }, step * 3)
     .to(backPawKick, { attr: { transform: "rotate(10 285 332) translate(0 0)" }, duration: step, ease: "sine.inOut" }, step * 3)
     .to(storyBunnyGroup, { x: -320, opacity: 0, duration: 0.12, ease: "power1.in" }, 0.78)
-    .set(storyBunnyGroup, { x: 420, y: 0, opacity: 0 })
-    .to(storyBunnyGroup, { opacity: 1, x: 0, duration: 0.32, ease: "power2.out" })
+    .set(storyBunnyGroup, { x: 420, y: -112, scaleX: 0.66, scaleY: 0.66, opacity: 0 })
+    .set(bookshelfWrap, { zIndex: 5 }, 0.90)
+    .to(storyBunnyGroup, {
+      opacity: 1,
+      x: 156,
+      y: -112,
+      scaleX: 0.66,
+      scaleY: 0.66,
+      duration: returnTravel,
+      ease: "power2.out"
+    })
+    .to(storyHeadGroup, {
+      x: -8,
+      rotation: 10,
+      duration: 0.18,
+      ease: "power2.out"
+    })
+    .to(storyHeadGroup, {
+      x: -4,
+      rotation: 4,
+      duration: 1.4,
+      ease: "sine.inOut"
+    })
+    .to(storyBunnyGroup, {
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+      duration: 0.42,
+      ease: "power2.inOut"
+    })
+    .to(storyHeadGroup, {
+      x: 0,
+      rotation: 0,
+      duration: 0.22,
+      ease: "power2.out"
+    }, "<")
     .to(nearEarKick, {
       attr: { transform: "" },
       duration: 0.22,
@@ -1107,7 +1304,7 @@ function triggerSwitchStay() {
   activeSwitchAction = "stay";
   setActiveSwitchButton("stay");
 
-  gsap.timeline({
+  switchActionTL = gsap.timeline({
     onComplete: () => queueSwitchReset(0.35)
   })
     .to(nearEarKick, {
@@ -1199,7 +1396,9 @@ function hideSwitchCallouts() {
     overwrite: true,
     onComplete: () => {
       gsap.set(switchCallouts, { visibility: "hidden" });
-      resetSwitchBunnyState();
+      if (activeSwitchAction || switchActionTL) {
+        resetSwitchBunnyState();
+      }
       disableSwitchHeadroom();
     }
   });
@@ -1241,11 +1440,14 @@ function setup() {
   bunnyStoryHeadroomLocks = 0;
   disableSwitchHeadroom();
   bindSwitchButtons();
+  bindRestartButton();
+  bindThemeToggle();
 
   initCodeLayer();
 
   gsap.set([titleH1, titleSub], { opacity: 0 });
   gsap.set(captionArea, { opacity: 0, y: 6 });
+  if (restartButton) gsap.set(restartButton, { opacity: 0, visibility: "hidden", y: 8 });
 
   gsap.set(bunnyIntro, { opacity: 1, visibility: "visible" });
   gsap.set(bunnyStory, { opacity: 0, visibility: "hidden" });
@@ -1427,8 +1629,10 @@ function setup() {
 
         if (idx === 6) {
           showStorySideBunny();
+          showRestartButton();
         } else {
           hideEndBall();
+          hideRestartButton();
         }
       },
       onEnterBack: () => {
@@ -1487,8 +1691,10 @@ function setup() {
 
         if (idx === 6) {
           showStorySideBunny();
+          showRestartButton();
         } else {
           hideEndBall();
+          hideRestartButton();
         }
       }
     });
