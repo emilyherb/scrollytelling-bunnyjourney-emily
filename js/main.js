@@ -39,7 +39,6 @@ const eyelidBlink = document.getElementById("eyelidBlink");
 const storyHeadGroup = document.querySelector("#bunnyStory #headGroup");
 const storyBunnyGroup = document.querySelector("#bunnyStory #bunnyGroup");
 const firstContactBridge = document.getElementById("firstContactBridge");
-const firstContactBridgeShade = document.getElementById("firstContactBridgeShade");
 const nearEarKick = document.getElementById("nearEarKick");
 const farEarKick = document.getElementById("farEarKick");
 const legBack = document.getElementById("legBack");
@@ -108,60 +107,82 @@ const STORY = [
   }
 ];
 
+const END_REST_CAPTION = {
+  kicker: "THE END",
+  text: "And then I rest. Because I know I can try again.",
+  small: ""
+};
+
 /* ─── Code content ───────────────────────────────────────────────────── */
 function makeCodeLines() {
-  const snippets = [
-    `// section 2: learning the world by reading it`,
-    `const bunny = { name: "Mochi", brave: false, curiosity: 0 };`,
-    ``,
-    `function sniff(place) {`,
-    `  return place.scents.map(s => s?.note ?? "unknown");`,
-    `}`,
-    ``,
-    `function listen(world) {`,
-    `  const sounds = world.events.filter(e => e.type !== "danger");`,
-    `  return sounds.length;`,
-    `}`,
-    ``,
-    `// tiny steps: observe -> store -> try`,
-    `let step = 0;`,
-    `while (step < 7) {`,
-    `  bunny.curiosity += 1;`,
-    `  if (bunny.curiosity > 2) bunny.brave = true;`,
-    `  step++;`,
-    `}`,
-    ``,
-    `// the DOM: a room of elements`,
-    `const room = document.querySelector(".world");`,
-    `room?.classList.add("safe");`,
-    ``,
-    `// events feel like footsteps`,
-    `window.addEventListener("scroll", () => {`,
-    `  bunny.brave = bunny.curiosity > 3;`,
-    `});`,
-    ``,
-    `// a promise: things can be slow and still be real`,
-    `const trust = new Promise(resolve => setTimeout(resolve, 700));`,
-    `await trust;`,
-    ``,
-    `// gentle branching`,
-    `if (bunny.brave) {`,
-    `  room?.setAttribute("data-mode", "explore");`,
-    `} else {`,
-    `  room?.setAttribute("data-mode", "wait");`,
-    `}`,
-    ``,
-    `// a little GSAP magic, because movement tells stories`,
-    `gsap.to("#bunnyWrap", {`,
-    `  scale: 1,`,
-    `  duration: 1.2,`,
-    `  ease: "power2.inOut"`,
-    `});`
-  ];
-
   const lines = [];
-  for (let i = 0; i < 50; i++) {
-    lines.push(...snippets, "", `// --- ${String(i + 1).padStart(2, "0")} ---`, "");
+  for (let i = 0; i < 90; i++) {
+    const n = String(i + 1).padStart(2, "0");
+    const threshold = 2 + (i % 4);
+    const trustDelay = 700 + i * 20;
+    const mood = ["watch", "sniff", "wait", "test"][i % 4];
+    const mode = i % 2 === 0 ? "explore" : "wait";
+
+    lines.push(
+      `// --- observation pass ${n} ---`,
+      `const bunny${n} = { name: "Mochi", brave: false, curiosity: ${i % 3} };`,
+      `const memory${n} = [];`,
+      ``,
+      `function sniff${n}(place) {`,
+      `  return place.scents.map(s => s?.note ?? "unknown-${n}");`,
+      `}`,
+      ``,
+      `function listen${n}(world) {`,
+      `  const sounds = world.events.filter(e => e.type !== "danger");`,
+      `  return sounds.length + ${i % 5};`,
+      `}`,
+      ``,
+      `function remember${n}(event) {`,
+      `  memory${n}.push(event);`,
+      `  return memory${n}.slice(-3);`,
+      `}`,
+      ``,
+      `let step${n} = 0;`,
+      `while (step${n} < ${7 + (i % 3)}) {`,
+      `  bunny${n}.curiosity += 1;`,
+      `  if (bunny${n}.curiosity > ${threshold}) bunny${n}.brave = true;`,
+      `  remember${n}({ step: step${n}, brave: bunny${n}.brave });`,
+      `  step${n}++;`,
+      `}`,
+      ``,
+      `const room${n} = document.querySelector(".world");`,
+      `room${n}?.dataset.mood = "${mood}";`,
+      `room${n}?.classList.add("safe-${n}");`,
+      ``,
+      `const paths${n} = ["hay", "shadow", "door"];`,
+      `const nextPath${n} = paths${n}[${i % 3}];`,
+      `room${n}?.setAttribute("data-path", nextPath${n});`,
+      ``,
+      `window.addEventListener("scroll", () => {`,
+      `  bunny${n}.brave = bunny${n}.curiosity > ${threshold + 1};`,
+      `  room${n}?.style.setProperty("--curiosity", bunny${n}.curiosity);`,
+      `});`,
+      ``,
+      `const trust${n} = new Promise(resolve => setTimeout(resolve, ${trustDelay}));`,
+      `await trust${n};`,
+      ``,
+      `if (bunny${n}.brave) {`,
+      `  room${n}?.setAttribute("data-mode", "${mode}");`,
+      `} else {`,
+      `  room${n}?.setAttribute("data-mode", "observe");`,
+      `}`,
+      ``,
+      `for (const note of remember${n}("settled")) {`,
+      `  console.debug("memory-${n}", note);`,
+      `}`,
+      ``,
+      `gsap.to("#bunnyWrap", {`,
+      `  scale: 1,`,
+      `  duration: ${Number((1.1 + (i % 4) * 0.1).toFixed(1))},`,
+      `  ease: "power2.inOut"`,
+      `});`,
+      ``
+    );
   }
   return lines.join("\n");
 }
@@ -169,7 +190,7 @@ function makeCodeLines() {
 function initCodeLayer() {
   if (!codeBlock || !codeLayer) return;
   codeBlock.textContent = makeCodeLines();
-  gsap.set(codeBlock, { y: 420, x: 0 });
+  gsap.set(codeBlock, { y: 520, x: 140 });
   gsap.set(codeLayer, { opacity: 0, y: 10 });
 }
 
@@ -200,6 +221,12 @@ function getScales() {
 
 function setCaption(index, { animate = true } = {}) {
   const data = STORY[index];
+  if (!data) return;
+
+  setCaptionContent(data, { animate });
+}
+
+function setCaptionContent(data, { animate = true } = {}) {
   if (!data) return;
 
   captionKicker.textContent = data.kicker || "";
@@ -555,10 +582,6 @@ function resetFirstContactAnimation({ preserveHeadroom = false, killTimeline = t
     gsap.set(firstContactBridge, { opacity: 0 });
   }
 
-  if (firstContactBridgeShade) {
-    gsap.set(firstContactBridgeShade, { opacity: 0 });
-  }
-
   hideConsoleBox(true);
   if (!preserveHeadroom) {
     disableFirstContactHeadroom();
@@ -573,9 +596,7 @@ function initFirstContactAnimation() {
   firstContactTL = gsap.timeline({ paused: true });
 
   firstContactTL
-    .set([firstContactBridge, firstContactBridgeShade].filter(Boolean), {
-      opacity: (_, target) => (target === firstContactBridgeShade ? 0.78 : 1)
-    }, 0)
+    .set([firstContactBridge].filter(Boolean), { opacity: 1 }, 0)
 
     .to(storyHeadGroup, {
       duration: 0.38,
@@ -640,7 +661,7 @@ function initFirstContactAnimation() {
       ease: "elastic.out(1, 0.4)"
     }, "<+0.1")
 
-    .to([firstContactBridge, firstContactBridgeShade].filter(Boolean), {
+    .to([firstContactBridge].filter(Boolean), {
       duration: 0.12,
       opacity: 0,
       ease: "power1.out"
@@ -862,11 +883,24 @@ function initEndScrollAnimation() {
         showStorySideBunny();
         showEndBall();
         stopEndBreathing({ resetPose: true });
+        setCaption(6, { animate: false });
+        hideRestartButton();
       },
       onEnterBack: () => {
         showStorySideBunny();
         showEndBall();
         stopEndBreathing({ resetPose: true });
+        setCaption(6, { animate: false });
+        hideRestartButton();
+      },
+      onUpdate: (self) => {
+        if (self.progress >= 0.68) {
+          setCaptionContent(END_REST_CAPTION, { animate: false });
+          showRestartButton();
+        } else {
+          setCaption(6, { animate: false });
+          hideRestartButton();
+        }
       },
       onLeave: () => {
         hideEndBall();
@@ -875,6 +909,7 @@ function initEndScrollAnimation() {
       onLeaveBack: () => {
         hideEndBall();
         stopEndBreathing({ resetPose: true });
+        hideRestartButton();
       }
     }
   });
@@ -1629,7 +1664,6 @@ function setup() {
 
         if (idx === 6) {
           showStorySideBunny();
-          showRestartButton();
         } else {
           hideEndBall();
           hideRestartButton();
@@ -1691,7 +1725,6 @@ function setup() {
 
         if (idx === 6) {
           showStorySideBunny();
-          showRestartButton();
         } else {
           hideEndBall();
           hideRestartButton();
@@ -1704,8 +1737,8 @@ function setup() {
   if (step2 && codeLayer && codeBlock) {
     ScrollTrigger.create({
       trigger: step2,
-      start: "top 65%",
-      end: "bottom 35%",
+      start: "top top",
+      end: "bottom top",
       onEnter: () => gsap.to(codeLayer, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }),
       onEnterBack: () => gsap.to(codeLayer, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }),
       onLeave: () => gsap.to(codeLayer, { opacity: 0, y: 10, duration: 0.25, ease: "power2.in" }),
@@ -1713,11 +1746,11 @@ function setup() {
     });
 
     gsap.to(codeBlock, {
-      y: -1800,
+      y: -1400,
       ease: "none",
       scrollTrigger: {
         trigger: step2,
-        start: "top 60%",
+        start: "top top",
         end: "bottom top",
         scrub: true
       }
