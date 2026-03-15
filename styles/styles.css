@@ -249,7 +249,7 @@ body {
 
 /* ─── Scene ──────────────────────────────────────────────────────────── */
 .step--end {
-  height: 200vh;
+  height: 300vh;
 }
 
 .step--outro-spacer {
@@ -536,6 +536,304 @@ body {
   box-shadow: 0 14px 28px rgba(0,0,0,.12);
 }
 
+/* ─── Memory montage ────────────────────────────────────────────────── */
+.memoryScenes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.memoryTrack {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.memoryMoment,
+.memoryGlow,
+.memoryGround,
+.memorySkyBand,
+.memoryProp,
+.memoryMomentLabel {
+  position: absolute;
+}
+
+.memoryMoment {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.memoryGlow {
+  inset: 6% 10% auto;
+  height: 44%;
+  border-radius: 50%;
+  filter: blur(34px);
+  opacity: 0.72;
+}
+
+.memoryGlow--eat {
+  background: radial-gradient(circle, rgba(216, 198, 122, 0.44), rgba(216, 198, 122, 0));
+}
+
+.memoryGlow--outside {
+  background: radial-gradient(circle, rgba(150, 189, 118, 0.36), rgba(150, 189, 118, 0));
+}
+
+.memoryGlow--nap {
+  background: radial-gradient(circle, rgba(197, 162, 143, 0.34), rgba(197, 162, 143, 0));
+}
+
+.memoryGround {
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  height: 34%;
+  border-radius: 52% 52% 0 0;
+}
+
+.memoryGround--eat {
+  background: linear-gradient(180deg, rgba(178, 194, 146, 0.9), rgba(128, 156, 101, 0.96));
+}
+
+.memoryGround--nap {
+  background: linear-gradient(180deg, rgba(194, 178, 157, 0.62), rgba(154, 132, 113, 0.84));
+}
+
+.memorySkyBand {
+  left: -8%;
+  right: -8%;
+  top: 0;
+  height: 58%;
+  background: linear-gradient(180deg, rgba(224, 230, 216, 0.95), rgba(205, 221, 191, 0.52));
+}
+
+.memoryHayStack {
+  bottom: 12%;
+  width: 24%;
+  height: 18%;
+  border-radius: 44% 48% 42% 46%;
+  background:
+    repeating-linear-gradient(130deg, #cfbb66 0 10px, #e5d479 10px 16px, #bca352 16px 20px);
+  box-shadow: inset 0 -10px 12px rgba(101, 77, 24, 0.14);
+}
+
+.memoryHayStack--left {
+  left: 2%;
+}
+
+.memoryHayStack--right {
+  right: 2%;
+}
+
+.memoryCarrotGroup {
+  right: 10%;
+  bottom: 26%;
+  width: 14%;
+  height: 20%;
+}
+
+.memoryCarrotGroup span {
+  position: absolute;
+  bottom: 0;
+  width: 26%;
+  height: 100%;
+  border-radius: 40% 40% 65% 65%;
+  background: linear-gradient(180deg, #f4964e, #db6634);
+}
+
+.memoryCarrotGroup span::before {
+  content: "";
+  position: absolute;
+  left: 22%;
+  top: -16%;
+  width: 56%;
+  height: 20%;
+  border-radius: 50%;
+  background: #7aa867;
+}
+
+.memoryCarrotGroup span:nth-child(1) {
+  left: 0;
+  transform: rotate(-10deg);
+}
+
+.memoryCarrotGroup span:nth-child(2) {
+  left: 35%;
+}
+
+.memoryCarrotGroup span:nth-child(3) {
+  right: 0;
+  transform: rotate(11deg);
+}
+
+.memoryHayBit {
+  width: 9%;
+  height: 3%;
+  border-radius: 999px;
+  background: #d8c466;
+}
+
+.memoryHayBit--1 {
+  left: 20%;
+  bottom: 30%;
+  transform: rotate(-18deg);
+}
+
+.memoryHayBit--2 {
+  right: 24%;
+  bottom: 34%;
+  transform: rotate(15deg);
+}
+
+.memorySun {
+  right: 10%;
+  top: 8%;
+  width: 14%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff4bf 0, #f0cf81 52%, #e1b366 100%);
+  box-shadow: 0 0 34px rgba(241, 208, 126, 0.34);
+}
+
+.memoryCloud {
+  width: 18%;
+  height: 8%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.memoryCloud::before,
+.memoryCloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.memoryCloud::before {
+  left: 18%;
+  top: -40%;
+  width: 34%;
+  height: 125%;
+}
+
+.memoryCloud::after {
+  right: 14%;
+  top: -28%;
+  width: 28%;
+  height: 106%;
+}
+
+.memoryCloud--1 {
+  left: 10%;
+  top: 18%;
+}
+
+.memoryCloud--2 {
+  left: 64%;
+  top: 26%;
+}
+
+.memoryHill {
+  bottom: 0;
+  width: 36%;
+  border-radius: 50% 50% 0 0;
+}
+
+.memoryHill--left {
+  left: -6%;
+  height: 28%;
+  background: #92b573;
+}
+
+.memoryHill--right {
+  right: -7%;
+  height: 34%;
+  background: #769d57;
+}
+
+.memoryGrass {
+  bottom: 14%;
+  width: 18%;
+  height: 10%;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 7px, #7da55d 7px 11px, transparent 11px 15px);
+}
+
+.memoryGrass--1 {
+  left: 8%;
+}
+
+.memoryGrass--2 {
+  right: 10%;
+}
+
+.memoryBlanket {
+  left: 10%;
+  right: 10%;
+  bottom: 9%;
+  height: 30%;
+  border-radius: 26px 26px 18px 18px;
+  background: linear-gradient(180deg, rgba(201, 157, 132, 0.96), rgba(171, 118, 92, 0.98));
+}
+
+.memoryPillow {
+  left: 14%;
+  bottom: 28%;
+  width: 16%;
+  height: 11%;
+  border-radius: 16px;
+  background: rgba(248, 240, 232, 0.96);
+}
+
+.memoryBlanketFold {
+  left: 18%;
+  right: 18%;
+  bottom: 15%;
+  height: 16%;
+  border-radius: 18px;
+  background: rgba(226, 184, 161, 0.58);
+}
+
+.memoryZs {
+  right: 33%;
+  top: 30%;
+  display: grid;
+  gap: 2px;
+  color: color-mix(in srgb, var(--secondary-90) 54%, transparent);
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
+.memoryZs span:nth-child(1) {
+  font-size: 16px;
+}
+
+.memoryZs span:nth-child(2) {
+  font-size: 21px;
+  transform: translateX(8px);
+}
+
+.memoryZs span:nth-child(3) {
+  font-size: 26px;
+  transform: translateX(18px);
+}
+
+.memoryMomentLabel {
+  left: 16px;
+  bottom: 12px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.05;
+  color: color-mix(in srgb, var(--secondary-90) 84%, transparent);
+}
+
 /* ─── Caption Area ───────────────────────────────────────────────────── */
 .captionArea {
   position: relative;
@@ -613,6 +911,7 @@ body {
 .step--intro { height: 300vh; }
 .step--arrival { height: 150vh; }
 .step--first-contact { height: 180vh; }
+.step--memory { height: 560vh; }
 
 .sticky-scene::after {
   content: "";
@@ -657,6 +956,12 @@ body {
   .switchCallout--2 { left: -6%; top: 42%; }
   .switchCallout--3 { left: -1%; top: 63%; }
 
+  .memoryGround,
+  .memorySkyBand {
+    left: -16%;
+    right: -16%;
+  }
+
   .endBallWrap {
     width: min(120px, 22vw);
     left: 10%;
@@ -682,6 +987,22 @@ body {
   .switchCallout--1 { left: -8%; top: 22%; }
   .switchCallout--2 { left: -9%; top: 44%; }
   .switchCallout--3 { left: -4%; top: 64%; }
+
+  .memoryHayStack {
+    width: 28%;
+  }
+
+  .memoryCarrotGroup {
+    width: 18%;
+  }
+
+  .memoryCloud {
+    width: 22%;
+  }
+
+  .memoryMomentLabel {
+    font-size: 16px;
+  }
 
   .endBallWrap {
     width: min(100px, 24vw);

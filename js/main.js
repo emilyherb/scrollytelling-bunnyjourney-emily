@@ -54,12 +54,18 @@ const calloutMood = document.getElementById("calloutMood");
 const calloutSafe = document.getElementById("calloutSafe");
 const switchCallouts = document.getElementById("switchCallouts");
 const switchButtons = Array.from(document.querySelectorAll(".switchButton"));
+const memoryScenes = document.getElementById("memoryScenes");
+const memoryTrack = document.getElementById("memoryTrack");
+const memoryMomentEat = document.getElementById("memoryMomentEat");
+const memoryMomentOutside = document.getElementById("memoryMomentOutside");
+const memoryMomentNap = document.getElementById("memoryMomentNap");
 
 const introStep = document.querySelector(".step--intro");
 const steps = Array.from(document.querySelectorAll(".step[data-step]"));
 const step2 = document.querySelector('.step[data-step="1"]');
 const firstContactStep = document.querySelector('.step[data-step="2"]');
 const namingThingsStep = document.querySelector('.step[data-step="3"]');
+const memoryStep = document.querySelector('.step[data-step="5"]');
 const endStep = document.querySelector('.step[data-step="6"]');
 let namingEarState = "first";
 let activeSwitchAction = null;
@@ -68,6 +74,7 @@ let switchActionTL = null;
 let bunnyStoryHeadroomLocks = 0;
 let restartBound = false;
 let themeToggleBound = false;
+let memoryParallaxTL = null;
 
 /* ─── Story Content ──────────────────────────────────────────────────── */
 const STORY = [
@@ -812,6 +819,29 @@ function resetEndAnimation() {
   });
 }
 
+function resetEndArtifacts() {
+  if (endBreathingTL) {
+    endBreathingTL.kill();
+    endBreathingTL = null;
+  }
+
+  if (!endBallWrap || !ballGroup || !poseStand || !poseLay) return;
+
+  gsap.set(endBallWrap, {
+    visibility: "hidden",
+    opacity: 0,
+    x: 0,
+    y: 0
+  });
+
+  gsap.set(ballGroup, { rotation: 0 });
+  gsap.set(poseStand, { opacity: 1, visibility: "visible" });
+  gsap.set(poseLay, { opacity: 0, visibility: "hidden" });
+  if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+  if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+  if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+}
+
 function showEndBall() {
   if (!endBallWrap) return;
   gsap.set(endBallWrap, {
@@ -883,6 +913,9 @@ function initEndScrollAnimation() {
         showStorySideBunny();
         showEndBall();
         stopEndBreathing({ resetPose: true });
+        if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+        if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+        if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
         setCaption(6, { animate: false });
         hideRestartButton();
       },
@@ -890,14 +923,23 @@ function initEndScrollAnimation() {
         showStorySideBunny();
         showEndBall();
         stopEndBreathing({ resetPose: true });
+        if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+        if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+        if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
         setCaption(6, { animate: false });
         hideRestartButton();
       },
       onUpdate: (self) => {
         if (self.progress >= 0.68) {
+          if (standEyeDark) gsap.set(standEyeDark, { opacity: 0, visibility: "visible" });
+          if (standEyeHi) gsap.set(standEyeHi, { opacity: 0, visibility: "visible" });
+          if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 1, visibility: "visible" });
           setCaptionContent(END_REST_CAPTION, { animate: false });
           showRestartButton();
         } else {
+          if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+          if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+          if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
           setCaption(6, { animate: false });
           hideRestartButton();
         }
@@ -953,13 +995,13 @@ function initEndScrollAnimation() {
 
     .to(endBallWrap, {
       x: -2250,
-      duration: 0.28,
+      duration: 0.34,
       ease: "none"
     }, 0.35)
 
     .to(ballGroup, {
       rotation: -1000,
-      duration: 0.28,
+      duration: 0.34,
       ease: "none"
     }, 0.35)
 
@@ -1467,6 +1509,151 @@ function showSwitchCallouts() {
   });
 }
 
+function hideMemoryScenes() {
+  if (!memoryScenes) return;
+
+  const moments = [memoryMomentEat, memoryMomentOutside, memoryMomentNap].filter(Boolean);
+  gsap.killTweensOf([memoryScenes, memoryTrack, ...moments]);
+
+  gsap.to(moments, {
+    opacity: 0,
+    duration: 0.18,
+    stagger: 0.04,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to(memoryScenes, {
+    opacity: 0,
+    duration: 0.2,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(memoryScenes, { visibility: "hidden" });
+      if (memoryTrack) gsap.set(memoryTrack, { y: 0 });
+      if (memoryMomentEat) gsap.set(memoryMomentEat, { y: 0, opacity: 1 });
+      if (memoryMomentOutside) gsap.set(memoryMomentOutside, { y: 0, opacity: 0 });
+      if (memoryMomentNap) gsap.set(memoryMomentNap, { y: 0, opacity: 0 });
+      if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+      if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+      if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+    }
+  });
+}
+
+function showMemoryScenes() {
+  if (!memoryScenes) return;
+
+  const moments = [memoryMomentEat, memoryMomentOutside, memoryMomentNap].filter(Boolean);
+  gsap.killTweensOf([memoryScenes, memoryTrack, ...moments]);
+  hideEndBall();
+  stopEndBreathing({ resetPose: true });
+
+  gsap.set(memoryScenes, { visibility: "visible" });
+  if (memoryMomentEat) gsap.set(memoryMomentEat, { opacity: 1, y: 0 });
+  if (memoryMomentOutside) gsap.set(memoryMomentOutside, { opacity: 0, y: 0 });
+  if (memoryMomentNap) gsap.set(memoryMomentNap, { opacity: 0, y: 0 });
+  if (memoryTrack) gsap.set(memoryTrack, { y: 0 });
+  if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+  if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+  if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+
+  gsap.to(memoryScenes, {
+    opacity: 1,
+    duration: 0.28,
+    ease: "power2.out",
+    overwrite: true
+  });
+
+  gsap.to(memoryMomentEat, {
+    opacity: 1,
+    duration: 0.2,
+    ease: "power2.out",
+    overwrite: true
+  });
+}
+
+function resetMemoryEyes() {
+  if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+  if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+  if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+}
+
+function updateMemoryScenes(progress) {
+  if (!memoryMomentEat || !memoryMomentOutside || !memoryMomentNap || !bunnyStory || !storyHeadGroup) return;
+
+  const mix = (start, end, value) => {
+    if (value <= start) return 0;
+    if (value >= end) return 1;
+    return (value - start) / (end - start);
+  };
+
+  const eatOut = mix(0.24, 0.38, progress);
+  const outsideIn = mix(0.28, 0.44, progress);
+  const outsideOut = mix(0.42, 0.54, progress);
+  const napIn = mix(0.48, 0.60, progress);
+
+  const eatOpacity = 1 - eatOut;
+  const outsideOpacity = Math.max(0, Math.min(1, outsideIn * (1 - outsideOut)));
+  const napOpacity = napIn;
+  const napClosed = mix(0.54, 0.68, progress);
+
+  gsap.set(memoryMomentEat, { opacity: eatOpacity });
+  gsap.set(memoryMomentOutside, { opacity: outsideOpacity });
+  gsap.set(memoryMomentNap, { opacity: napOpacity });
+
+  if (standEyeDark) gsap.set(standEyeDark, { opacity: 1 - napClosed, visibility: "visible" });
+  if (standEyeHi) gsap.set(standEyeHi, { opacity: 1 - napClosed, visibility: "visible" });
+  if (eyelidBlink) gsap.set(eyelidBlink, { opacity: napClosed, visibility: napClosed > 0 ? "visible" : "hidden" });
+
+  gsap.set(memoryMomentEat.querySelectorAll(".memoryGlow, .memoryProp, .memoryMomentLabel"), {
+    y: -34 * progress
+  });
+  gsap.set(memoryMomentOutside.querySelectorAll(".memoryGlow, .memoryProp, .memoryMomentLabel"), {
+    y: 28 - 54 * progress
+  });
+  gsap.set(memoryMomentNap.querySelectorAll(".memoryGlow, .memoryProp, .memoryMomentLabel"), {
+    y: 22 - 26 * progress
+  });
+
+  if (progress < 0.32) {
+    gsap.set(bunnyStory, { y: -4 * progress / 0.32, scaleX: 0.998, scaleY: 1.008, rotation: 0 });
+    gsap.set(storyHeadGroup, { x: 0, y: 8 * progress / 0.32, rotation: 7 * progress / 0.32 });
+  } else if (progress < 0.50) {
+    const local = (progress - 0.32) / 0.18;
+    gsap.set(bunnyStory, { y: -8 - 6 * local, scaleX: 0.995, scaleY: 1.01, rotation: -1 * local });
+    gsap.set(storyHeadGroup, { x: 0, y: 8 - 14 * local, rotation: 7 - 10 * local });
+  } else {
+    const local = Math.min(1, (progress - 0.50) / 0.50);
+    gsap.set(bunnyStory, {
+      y: -14 + 14 * local,
+      scaleX: 1 + 0.02 * local,
+      scaleY: 1 - 0.02 * local,
+      rotation: 0
+    });
+    gsap.set(storyHeadGroup, { x: 0, y: -6 + 6 * local, rotation: -6 + 6 * local });
+  }
+}
+
+function initMemoryAnimation() {
+  if (!memoryStep || !memoryScenes || !memoryTrack || !bunnyStory || !storyHeadGroup) return;
+
+  memoryParallaxTL?.kill?.();
+
+  memoryParallaxTL = ScrollTrigger.create({
+    trigger: memoryStep,
+    start: "top 85%",
+    end: "bottom top",
+    scrub: 0.45,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => updateMemoryScenes(self.progress),
+    onEnter: () => updateMemoryScenes(0),
+    onEnterBack: () => updateMemoryScenes(0),
+    onLeave: () => resetMemoryEyes(),
+    onLeaveBack: () => updateMemoryScenes(0)
+  });
+}
+
 function setup() {
   ScrollTrigger.getAll().forEach((st) => st.kill());
   resetEndAnimation();
@@ -1552,6 +1739,14 @@ function setup() {
     });
   }
 
+  if (memoryScenes) {
+    gsap.set(memoryScenes, { opacity: 0, visibility: "hidden" });
+    if (memoryTrack) gsap.set(memoryTrack, { y: 0 });
+    if (memoryMomentEat) gsap.set(memoryMomentEat, { opacity: 1, y: 0 });
+    if (memoryMomentOutside) gsap.set(memoryMomentOutside, { opacity: 0, y: 0 });
+    if (memoryMomentNap) gsap.set(memoryMomentNap, { opacity: 0, y: 0 });
+  }
+
   updateNamingCallouts(0);
   setCaption(1, { animate: false });
 
@@ -1616,6 +1811,7 @@ function setup() {
           hideConsoleBox(true);
           hideNamingCallouts();
           hideSwitchCallouts();
+          hideMemoryScenes();
           hideBookshelf();
           hideEndBall();
           return;
@@ -1662,10 +1858,17 @@ function setup() {
           hideBookshelf();
         }
 
+        if (idx === 5) {
+          showMemoryScenes();
+        } else {
+          hideMemoryScenes();
+          resetMemoryEyes();
+        }
+
         if (idx === 6) {
           showStorySideBunny();
         } else {
-          hideEndBall();
+          resetEndArtifacts();
           hideRestartButton();
         }
       },
@@ -1677,6 +1880,7 @@ function setup() {
           hideConsoleBox(true);
           hideNamingCallouts();
           hideSwitchCallouts();
+          hideMemoryScenes();
           hideBookshelf();
           hideEndBall();
           return;
@@ -1723,10 +1927,17 @@ function setup() {
           hideBookshelf();
         }
 
+        if (idx === 5) {
+          showMemoryScenes();
+        } else {
+          hideMemoryScenes();
+          resetMemoryEyes();
+        }
+
         if (idx === 6) {
           showStorySideBunny();
         } else {
-          hideEndBall();
+          resetEndArtifacts();
           hideRestartButton();
         }
       }
@@ -1772,6 +1983,8 @@ function setup() {
       }
     });
   }
+
+  initMemoryAnimation();
 
   /* ─── End section scrub animation ─────────────────────────────────── */
   initEndScrollAnimation();

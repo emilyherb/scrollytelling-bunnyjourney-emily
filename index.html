@@ -616,8 +616,13 @@
                   <ellipse cx="120" cy="220" rx="48" ry="16" fill="#A0826D"/>
                 </g>
 
-                <circle cx="45" cy="235" r="8" fill="#3B2614"/>
-                <circle cx="47" cy="233" r="2.5" fill="#FFFFFF"/>
+                <path
+                  d="M 36 235 Q 45 241 54 235"
+                  stroke="#3B2614"
+                  stroke-width="3"
+                  fill="none"
+                  stroke-linecap="round"
+                />
 
                 <ellipse id="lay-nose" cx="25" cy="245" rx="7" ry="9" fill="#6B5544"/>
                 <path d="M 25 253 Q 30 256 35 254" stroke="#6B5544" stroke-width="2" fill="none" stroke-linecap="round"/>
@@ -828,6 +833,45 @@
               <span class="calloutValue"><span class="calloutPrefix">if</span> talking <span class="calloutArrow">-&gt;</span> stay</span>
             </button>
           </div>
+
+          <div class="memoryScenes" id="memoryScenes" aria-hidden="true">
+            <div class="memoryTrack" id="memoryTrack">
+              <section class="memoryMoment memoryMoment--eat" id="memoryMomentEat">
+                <div class="memoryGlow memoryGlow--eat"></div>
+                <div class="memoryGround memoryGround--eat"></div>
+                <div class="memoryProp memoryHayStack memoryHayStack--left"></div>
+                <div class="memoryProp memoryHayStack memoryHayStack--right"></div>
+                <div class="memoryProp memoryCarrotGroup memoryCarrotGroup--right">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="memoryProp memoryHayBit memoryHayBit--1"></div>
+                <div class="memoryProp memoryHayBit memoryHayBit--2"></div>
+              </section>
+
+              <section class="memoryMoment memoryMoment--outside" id="memoryMomentOutside">
+                <div class="memoryGlow memoryGlow--outside"></div>
+                <div class="memorySkyBand"></div>
+                <div class="memoryProp memorySun"></div>
+                <div class="memoryProp memoryCloud memoryCloud--1"></div>
+                <div class="memoryProp memoryCloud memoryCloud--2"></div>
+                <div class="memoryProp memoryHill memoryHill--left"></div>
+                <div class="memoryProp memoryHill memoryHill--right"></div>
+                <div class="memoryProp memoryGrass memoryGrass--1"></div>
+                <div class="memoryProp memoryGrass memoryGrass--2"></div>
+              </section>
+
+              <section class="memoryMoment memoryMoment--nap" id="memoryMomentNap">
+                <div class="memoryGlow memoryGlow--nap"></div>
+                <div class="memoryGround memoryGround--nap"></div>
+                <div class="memoryProp memoryBlanket"></div>
+                <div class="memoryProp memoryPillow"></div>
+                <div class="memoryProp memoryBlanketFold"></div>
+                <div class="memoryProp memoryZs">
+                  <span>Z</span><span>Z</span><span>Z</span>
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
 
         <div class="captionArea" id="captionArea" aria-live="polite">
@@ -845,7 +889,7 @@
       <section class="step step--first-contact" data-step="2" aria-label="Section 3"></section>
       <section class="step" data-step="3" aria-label="Section 4"></section>
       <section class="step" data-step="4" aria-label="Section 5"></section>
-      <section class="step" data-step="5" aria-label="Section 6"></section>
+      <section class="step step--memory" data-step="5" aria-label="Section 6"></section>
       <section class="step step--end" data-step="6" aria-label="Section 7"></section>
       <section class="step step--outro-spacer" aria-hidden="true"></section>
     </div>
