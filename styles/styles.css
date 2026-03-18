@@ -536,6 +536,83 @@ body {
   box-shadow: 0 14px 28px rgba(0,0,0,.12);
 }
 
+.switchCarrotWrap {
+  position: absolute;
+  left: 15%;
+  top: 95%;
+  width: min(92px, 12vw);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.7) rotate(12deg);
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.12));
+}
+
+.switchCarrotWrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.switchShockWrap {
+  position: absolute;
+  left: 28%;
+  top: 14%;
+  width: min(110px, 14vw);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.72) rotate(-6deg);
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.08));
+}
+
+.switchShockWrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.switchTalkWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.switchTalkBubble {
+  position: absolute;
+  color: color-mix(in srgb, var(--secondary-90) 68%, transparent);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: .01em;
+  text-transform: none;
+  opacity: 0;
+  transform: translateY(10px) scale(0.94);
+  white-space: nowrap;
+  text-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+.switchTalkBubble--1 {
+  left: 56%;
+  top: 18%;
+}
+
+.switchTalkBubble--2 {
+  left: 66%;
+  top: 30%;
+}
+
+.switchTalkBubble--3 {
+  left: 59%;
+  top: 42%;
+}
+
 /* ─── Memory montage ────────────────────────────────────────────────── */
 .memoryScenes {
   position: absolute;
@@ -910,7 +987,7 @@ body {
 .step { height: 100vh; }
 .step--intro { height: 300vh; }
 .step--arrival { height: 150vh; }
-.step--first-contact { height: 180vh; }
+.step--first-contact { height: 210vh; }
 .step--memory { height: 560vh; }
 
 .sticky-scene::after {

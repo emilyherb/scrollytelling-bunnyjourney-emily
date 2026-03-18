@@ -54,6 +54,9 @@ const calloutMood = document.getElementById("calloutMood");
 const calloutSafe = document.getElementById("calloutSafe");
 const switchCallouts = document.getElementById("switchCallouts");
 const switchButtons = Array.from(document.querySelectorAll(".switchButton"));
+const switchCarrotWrap = document.getElementById("switchCarrotWrap");
+const switchShockWrap = document.getElementById("switchShockWrap");
+const switchTalkWrap = document.getElementById("switchTalkWrap");
 const memoryScenes = document.getElementById("memoryScenes");
 const memoryTrack = document.getElementById("memoryTrack");
 const memoryMomentEat = document.getElementById("memoryMomentEat");
@@ -99,7 +102,7 @@ const STORY = [
   {
     kicker: "THE SWITCH",
     text: "Not everything makes me run, but some things do.",
-    small: ""
+    small: "I wonder what happens when I click on them?"
   },
   {
     kicker: "THE MEMORY",
@@ -109,8 +112,8 @@ const STORY = [
   {
     kicker: "THE END",
     text:
-      "The world still surprises me. I still make mistakes. I still have to listen. But now, when something new arrives, I don't freeze the way I used to. I watch. I test. I learn.",
-    small: ""
+      "The world still surprises me. I still make mistakes. I still have to listen.",
+    small: "But now, when something new arrives, I don't freeze the way I used to. I watch. I test. I learn."
   }
 ];
 
@@ -132,7 +135,7 @@ function makeCodeLines() {
 
     lines.push(
       `// --- observation pass ${n} ---`,
-      `const bunny${n} = { name: "Mochi", brave: false, curiosity: ${i % 3} };`,
+      `const bunny${n} = { name: "Gizmo", brave: false, curiosity: ${i % 3} };`,
       `const memory${n} = [];`,
       ``,
       `function sniff${n}(place) {`,
@@ -967,73 +970,73 @@ function initEndScrollAnimation() {
       rotation: -2,
       duration: 0.10,
       ease: "none"
-    }, 0.10)
+    }, 0.18)
 
     .to("#bunnyStory #headGroup", {
       rotation: -10,
       duration: 0.12,
       ease: "none"
-    }, 0.10)
+    }, 0.18)
 
     .to("#bunnyStory #headGroup", {
       rotation: 18,
       duration: 0.08,
       ease: "none"
-    }, 0.24)
+    }, 0.32)
 
     .to(endBallWrap, {
       x: -18,
       duration: 0.03,
       ease: "none"
-    }, 0.32)
+    }, 0.40)
 
     .to(ballGroup, {
       rotation: -25,
       duration: 0.03,
       ease: "none"
-    }, 0.32)
+    }, 0.40)
 
     .to(endBallWrap, {
       x: -2250,
       duration: 0.34,
       ease: "none"
-    }, 0.35)
+    }, 0.43)
 
     .to(ballGroup, {
       rotation: -1000,
       duration: 0.34,
       ease: "none"
-    }, 0.35)
+    }, 0.43)
 
     .to(endBallWrap, {
       y: -18,
       duration: 0.06,
       ease: "none"
-    }, 0.41)
+    }, 0.49)
 
     .to(endBallWrap, {
       y: 0,
       duration: 0.08,
       ease: "none"
-    }, 0.47)
+    }, 0.55)
 
     .to("#bunnyStory #headGroup", {
       rotation: 0,
       duration: 0.12,
       ease: "none"
-    }, 0.40)
+    }, 0.48)
 
     .to("#bunnyStory #bunnyGroup", {
       rotation: 0,
       duration: 0.12,
       ease: "none"
-    }, 0.45)
+    }, 0.53)
 
     .to(endBallWrap, {
       opacity: 0,
       duration: 0.04,
       ease: "none"
-    }, 0.58)
+    }, 0.66)
 
     .to([standEyeDark, standEyeHi].filter(Boolean), {
       opacity: 0,
@@ -1218,6 +1221,44 @@ function resetSwitchBunnyState() {
     gsap.set(bookshelfWrap, { zIndex: 2 });
   }
 
+  if (switchCarrotWrap) {
+    gsap.set(switchCarrotWrap, {
+      opacity: 0,
+      visibility: "hidden",
+      x: 0,
+      y: 0,
+      scale: 0.7,
+      rotation: 12
+    });
+  }
+
+  if (switchShockWrap) {
+    gsap.set(switchShockWrap, {
+      opacity: 0,
+      visibility: "hidden",
+      scale: 0.72,
+      rotation: -6
+    });
+  }
+
+  if (switchTalkWrap) {
+    gsap.set(switchTalkWrap, { opacity: 0, visibility: "hidden" });
+    gsap.set(switchTalkWrap.querySelectorAll(".switchTalkBubble"), {
+      opacity: 0,
+      y: 10,
+      scale: 0.96
+    });
+  }
+
+  if (switchShockWrap) {
+    gsap.set(switchShockWrap, {
+      opacity: 0,
+      visibility: "hidden",
+      scale: 0.72,
+      rotation: -6
+    });
+  }
+
   if (legBack) gsap.set(legBack, { rotation: 0, svgOrigin: "270 285" });
   if (legFrontFarGroup) gsap.set(legFrontFarGroup, { rotation: 0, y: 0, svgOrigin: "165 305" });
   if (legFrontNearGroup) gsap.set(legFrontNearGroup, { rotation: 0, y: 0, svgOrigin: "190 310" });
@@ -1246,8 +1287,17 @@ function triggerSwitchHop() {
   });
 
   switchActionTL = gsap.timeline({
-    onComplete: () => queueSwitchReset(0.25)
+    onComplete: () => queueSwitchReset(0.3)
   })
+    .set(switchCarrotWrap, { visibility: "visible", opacity: 0, x: 0, y: 10, scale: 0.68, rotation: 16 }, 0)
+    .to(switchCarrotWrap, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      rotation: 4,
+      duration: 0.18,
+      ease: "back.out(1.6)"
+    }, 0)
     .to(storyBunnyGroup, {
       duration: 0.12,
       y: 6,
@@ -1273,6 +1323,65 @@ function triggerSwitchHop() {
       duration: 0.1,
       scaleX: 1,
       scaleY: 1
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.11,
+      y: 5,
+      scaleY: 0.93,
+      scaleX: 1.05,
+      ease: "power2.in"
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.2,
+      y: -24,
+      scaleY: 1.06,
+      scaleX: 0.97,
+      ease: "power2.out"
+    }, "<")
+    .to(storyBunnyGroup, {
+      duration: 0.22,
+      y: 0,
+      scaleY: 0.95,
+      scaleX: 1.04,
+      ease: "bounce.out"
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.1,
+      scaleX: 1,
+      scaleY: 1
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.1,
+      y: 4,
+      scaleY: 0.94,
+      scaleX: 1.04,
+      ease: "power2.in"
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.18,
+      y: -18,
+      scaleY: 1.04,
+      scaleX: 0.98,
+      ease: "power2.out"
+    }, "<")
+    .to(storyBunnyGroup, {
+      duration: 0.2,
+      y: 0,
+      scaleY: 0.97,
+      scaleX: 1.03,
+      ease: "bounce.out"
+    })
+    .to(storyBunnyGroup, {
+      duration: 0.1,
+      scaleX: 1,
+      scaleY: 1
+    })
+    .to(switchCarrotWrap, {
+      opacity: 0,
+      y: -6,
+      scale: 0.82,
+      duration: 0.16,
+      ease: "power2.out"
     });
 }
 
@@ -1297,11 +1406,26 @@ function triggerSwitchHide() {
     onComplete: () => queueSwitchReset(0.25)
   });
 
-  switchActionTL.to(nearEarKick, {
-    attr: { transform: "rotate(28 135 205) translate(3 2)" },
-    duration: 0.18,
-    ease: "power2.out"
-  }, 0)
+  switchActionTL
+    .set(switchShockWrap, { visibility: "visible", opacity: 0, scale: 0.72, rotation: -10 }, 0)
+    .to(switchShockWrap, {
+      opacity: 1,
+      scale: 1,
+      rotation: 0,
+      duration: 0.1,
+      ease: "power2.out"
+    }, 0)
+    .to(switchShockWrap, {
+      opacity: 0,
+      scale: 1.08,
+      duration: 0.12,
+      ease: "power2.out"
+    }, 0.12)
+    .to(nearEarKick, {
+      attr: { transform: "rotate(28 135 205) translate(3 2)" },
+      duration: 0.18,
+      ease: "power2.out"
+    }, 0)
     .to(farEarKick, {
       attr: { transform: "rotate(28 125 165) translate(3 2)" },
       duration: 0.18,
@@ -1381,9 +1505,20 @@ function triggerSwitchStay() {
   activeSwitchAction = "stay";
   setActiveSwitchButton("stay");
 
+  const talkBubbles = switchTalkWrap ? switchTalkWrap.querySelectorAll(".switchTalkBubble") : [];
+
   switchActionTL = gsap.timeline({
     onComplete: () => queueSwitchReset(0.35)
   })
+    .set(switchTalkWrap, { visibility: "visible", opacity: 1 }, 0)
+    .to(talkBubbles, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.26,
+      stagger: 0.08,
+      ease: "power2.out"
+    }, 0)
     .to(nearEarKick, {
       rotation: -28,
       svgOrigin: "135 215",
@@ -1427,7 +1562,14 @@ function triggerSwitchStay() {
       yoyo: true,
       repeat: 3,
       ease: "sine.inOut"
-    }, 0.1);
+    }, 0.1)
+    .to(talkBubbles, {
+      opacity: 0,
+      y: -8,
+      duration: 0.18,
+      stagger: 0.05,
+      ease: "power2.out"
+    }, 0.86);
 }
 
 function bindSwitchButtons() {
@@ -1736,6 +1878,17 @@ function setup() {
       opacity: 0,
       y: 8,
       scale: 0.98
+    });
+  }
+
+  if (switchCarrotWrap) {
+    gsap.set(switchCarrotWrap, {
+      opacity: 0,
+      visibility: "hidden",
+      x: 0,
+      y: 0,
+      scale: 0.7,
+      rotation: 12
     });
   }
 
