@@ -57,6 +57,9 @@ const switchButtons = Array.from(document.querySelectorAll(".switchButton"));
 const switchCarrotWrap = document.getElementById("switchCarrotWrap");
 const switchShockWrap = document.getElementById("switchShockWrap");
 const switchTalkWrap = document.getElementById("switchTalkWrap");
+const switchEggWrap = document.getElementById("switchEggWrap");
+const eggModal = document.getElementById("eggModal");
+const eggModalClose = document.getElementById("eggModalClose");
 const memoryScenes = document.getElementById("memoryScenes");
 const memoryTrack = document.getElementById("memoryTrack");
 const memoryMomentEat = document.getElementById("memoryMomentEat");
@@ -77,6 +80,7 @@ let switchActionTL = null;
 let bunnyStoryHeadroomLocks = 0;
 let restartBound = false;
 let themeToggleBound = false;
+let eggModalBound = false;
 let memoryParallaxTL = null;
 
 /* ─── Story Content ──────────────────────────────────────────────────── */
@@ -315,6 +319,50 @@ function bindRestartButton() {
     window.scrollTo({ top: 0, behavior: "smooth" });
     window.setTimeout(() => window.location.reload(), 700);
   });
+}
+
+function openEggModal() {
+  if (!eggModal) return;
+  gsap.killTweensOf(eggModal);
+  gsap.set(eggModal, { visibility: "visible", pointerEvents: "auto" });
+  gsap.to(eggModal, {
+    opacity: 1,
+    duration: 0.22,
+    ease: "power2.out",
+    overwrite: true
+  });
+}
+
+function closeEggModal() {
+  if (!eggModal) return;
+  gsap.killTweensOf(eggModal);
+  gsap.to(eggModal, {
+    opacity: 0,
+    duration: 0.18,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => gsap.set(eggModal, { visibility: "hidden", pointerEvents: "none" })
+  });
+}
+
+function bindEggModal() {
+  if (eggModalBound) return;
+
+  if (switchEggWrap) {
+    switchEggWrap.addEventListener("click", openEggModal);
+  }
+
+  if (eggModalClose) {
+    eggModalClose.addEventListener("click", closeEggModal);
+  }
+
+  if (eggModal) {
+    eggModal.addEventListener("click", (event) => {
+      if (event.target === eggModal) closeEggModal();
+    });
+  }
+
+  eggModalBound = true;
 }
 
 /* ─── Bunny state helpers ────────────────────────────────────────────── */
@@ -1250,15 +1298,6 @@ function resetSwitchBunnyState() {
     });
   }
 
-  if (switchShockWrap) {
-    gsap.set(switchShockWrap, {
-      opacity: 0,
-      visibility: "hidden",
-      scale: 0.72,
-      rotation: -6
-    });
-  }
-
   if (legBack) gsap.set(legBack, { rotation: 0, svgOrigin: "270 285" });
   if (legFrontFarGroup) gsap.set(legFrontFarGroup, { rotation: 0, y: 0, svgOrigin: "165 305" });
   if (legFrontNearGroup) gsap.set(legFrontNearGroup, { rotation: 0, y: 0, svgOrigin: "190 310" });
@@ -1613,6 +1652,10 @@ function hideSwitchCallouts() {
     duration: 0.2,
     ease: "power2.out",
     overwrite: true,
+    onStart: () => {
+      if (switchEggWrap) gsap.set(switchEggWrap, { visibility: "hidden", opacity: 0 });
+      closeEggModal();
+    },
     onComplete: () => {
       gsap.set(switchCallouts, { visibility: "hidden" });
       if (activeSwitchAction || switchActionTL) {
@@ -1649,6 +1692,16 @@ function showSwitchCallouts() {
     ease: "power2.out",
     overwrite: true
   });
+
+  if (switchEggWrap) {
+    gsap.set(switchEggWrap, { visibility: "visible" });
+    gsap.to(switchEggWrap, {
+      opacity: 1,
+      duration: 0.24,
+      ease: "power2.out",
+      overwrite: true
+    });
+  }
 }
 
 function hideMemoryScenes() {
@@ -1732,13 +1785,13 @@ function updateMemoryScenes(progress) {
 
   const eatOut = mix(0.24, 0.38, progress);
   const outsideIn = mix(0.28, 0.44, progress);
-  const outsideOut = mix(0.42, 0.54, progress);
-  const napIn = mix(0.48, 0.60, progress);
+  const outsideOut = mix(0.50, 0.66, progress);
+  const napIn = mix(0.60, 0.74, progress);
 
   const eatOpacity = 1 - eatOut;
   const outsideOpacity = Math.max(0, Math.min(1, outsideIn * (1 - outsideOut)));
   const napOpacity = napIn;
-  const napClosed = mix(0.54, 0.68, progress);
+  const napClosed = mix(0.64, 0.78, progress);
 
   gsap.set(memoryMomentEat, { opacity: eatOpacity });
   gsap.set(memoryMomentOutside, { opacity: outsideOpacity });
@@ -1761,12 +1814,12 @@ function updateMemoryScenes(progress) {
   if (progress < 0.32) {
     gsap.set(bunnyStory, { y: -4 * progress / 0.32, scaleX: 0.998, scaleY: 1.008, rotation: 0 });
     gsap.set(storyHeadGroup, { x: 0, y: 8 * progress / 0.32, rotation: 7 * progress / 0.32 });
-  } else if (progress < 0.50) {
-    const local = (progress - 0.32) / 0.18;
+  } else if (progress < 0.60) {
+    const local = (progress - 0.32) / 0.28;
     gsap.set(bunnyStory, { y: -8 - 6 * local, scaleX: 0.995, scaleY: 1.01, rotation: -1 * local });
     gsap.set(storyHeadGroup, { x: 0, y: 8 - 14 * local, rotation: 7 - 10 * local });
   } else {
-    const local = Math.min(1, (progress - 0.50) / 0.50);
+    const local = Math.min(1, (progress - 0.60) / 0.40);
     gsap.set(bunnyStory, {
       y: -14 + 14 * local,
       scaleX: 1 + 0.02 * local,
@@ -1806,6 +1859,7 @@ function setup() {
   bindSwitchButtons();
   bindRestartButton();
   bindThemeToggle();
+  bindEggModal();
 
   initCodeLayer();
 
@@ -1889,6 +1943,14 @@ function setup() {
       y: 0,
       scale: 0.7,
       rotation: 12
+    });
+  }
+
+  if (eggModal) {
+    gsap.set(eggModal, {
+      opacity: 0,
+      visibility: "hidden",
+      pointerEvents: "none"
     });
   }
 

@@ -763,6 +763,25 @@
                 </g>
               </svg>
             </div>
+
+            <button class="switchEggWrap" id="switchEggWrap" type="button" aria-label="Open bunny inspiration note">
+              <svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                  <linearGradient id="eggShellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fff6a8"/>
+                    <stop offset="50%" stop-color="#ffb3c7"/>
+                    <stop offset="100%" stop-color="#9fd7ff"/>
+                  </linearGradient>
+                </defs>
+                <ellipse cx="60" cy="78" rx="34" ry="45" fill="url(#eggShellGrad)" stroke="#bf8f8f" stroke-width="3"/>
+                <ellipse cx="49" cy="64" rx="8" ry="10" fill="#ffffff" opacity="0.42"/>
+                <path d="M35 92 Q60 82 85 92" stroke="#fff0f5" stroke-width="3" fill="none" opacity="0.78"/>
+                <path d="M40 110 Q60 101 80 110" stroke="#8bc87c" stroke-width="4" fill="none" opacity="0.85"/>
+                <circle cx="48" cy="56" r="3" fill="#9b77d8" opacity="0.8"/>
+                <circle cx="72" cy="98" r="4" fill="#ff8aa5" opacity="0.72"/>
+                <circle cx="80" cy="66" r="3" fill="#6cc3ff" opacity="0.78"/>
+              </svg>
+            </button>
           </div>
 
           <!-- First Contact console box -->
@@ -912,6 +931,33 @@
           <div class="caption" id="captionText"></div>
           <div class="captionSmall" id="captionSmall"></div>
           <button class="restartButton" id="restartButton" type="button">Restart Story</button>
+        </div>
+
+        <div class="eggModal" id="eggModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="eggModalTitle">
+          <div class="eggModalCard">
+            <button class="eggModalClose" id="eggModalClose" type="button" aria-label="Close inspiration note">Close</button>
+            <div class="eggModalKicker">Easter Egg</div>
+            <h2 class="eggModalTitle" id="eggModalTitle">The Story Behind This Story</h2>
+            <div class="eggModalGallery">
+              <figure class="eggModalPhoto eggModalPhoto--family">
+                <img src="assets/family.jpg" alt="Family photo holding both bunnies" />
+              </figure>
+              <div class="eggModalPair">
+                <figure class="eggModalPhoto eggModalPhoto--bunny">
+                  <img src="assets/gizmo.JPG" alt="Gizmo close-up portrait" />
+                  <figcaption>Gizmo</figcaption>
+                </figure>
+                <figure class="eggModalPhoto eggModalPhoto--bunny">
+                  <img src="assets/zola.JPG" alt="Zola close-up portrait" />
+                  <figcaption>Zola</figcaption>
+                </figure>
+              </div>
+            </div>
+            <p class="eggModalText">This piece is inspired by my two bunnies and the small, brave ways they learn the world each day. 
+              <br>
+              <br>
+              Naturally a little fearful, but still jumping in. So while you scroll through their story, know it's also mine.</p>
+          </div>
         </div>
       </div>
     </div>

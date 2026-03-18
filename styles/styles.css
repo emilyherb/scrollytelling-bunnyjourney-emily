@@ -574,6 +574,153 @@ body {
   height: auto;
 }
 
+.switchEggWrap {
+  position: absolute;
+  left: 96%;
+  top: 16%;
+  width: min(54px, 7vw);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 6;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 90%;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.12));
+  animation: switchEggWobble 2.4s ease-in-out infinite;
+}
+
+.switchEggWrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.switchEggWrap:hover {
+  animation-duration: 1.5s;
+}
+
+.switchEggWrap:focus-visible {
+  outline: 2px solid rgba(0, 108, 63, 0.38);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+@keyframes switchEggWobble {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  18% { transform: translate(-50%, -50%) rotate(-7deg); }
+  34% { transform: translate(-50%, -50%) rotate(6deg); }
+  50% { transform: translate(-50%, -50%) rotate(-4deg); }
+  66% { transform: translate(-50%, -50%) rotate(3deg); }
+}
+
+.eggModal {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(27, 22, 17, 0.3);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.eggModalCard {
+  width: min(520px, 88vw);
+  padding: 28px 28px 24px;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--primary-10) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--secondary-90) 10%, transparent);
+  box-shadow: 0 24px 54px rgba(0,0,0,.18);
+  position: relative;
+}
+
+.eggModalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.eggModalKicker {
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.eggModalTitle {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.02;
+  color: color-mix(in srgb, var(--secondary-90) 92%, transparent);
+}
+
+.eggModalGallery {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 14px;
+}
+
+.eggModalPair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.eggModalPhoto {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--secondary-00) 76%, transparent);
+  border: 1px solid color-mix(in srgb, var(--secondary-90) 8%, transparent);
+  box-shadow: 0 12px 28px rgba(0,0,0,.12);
+}
+
+.eggModalPhoto img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.eggModalPhoto--family img {
+  aspect-ratio: 4 / 2.5;
+  object-fit: cover;
+  max-height: 210px;
+}
+
+.eggModalPhoto--bunny img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  max-height: 170px;
+}
+
+.eggModalPhoto figcaption {
+  padding: 10px 12px 12px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: color-mix(in srgb, var(--secondary-90) 84%, transparent);
+}
+
+.eggModalText {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--secondary-90) 76%, transparent);
+}
+
 .switchTalkWrap {
   position: absolute;
   inset: 0;
@@ -988,7 +1135,7 @@ body {
 .step--intro { height: 300vh; }
 .step--arrival { height: 150vh; }
 .step--first-contact { height: 210vh; }
-.step--memory { height: 560vh; }
+.step--memory { height: 640vh; }
 
 .sticky-scene::after {
   content: "";
