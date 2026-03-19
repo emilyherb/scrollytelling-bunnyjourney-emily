@@ -220,9 +220,29 @@ function makeCodeLines() {
   return lines.join("\n");
 }
 
+function escapeCodeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function highlightCode(code) {
+  const pattern = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|\b(const|let|function|return|if|else|while|for|await|new|of)\b|\b(true|false|null)\b|\b(\d+(?:\.\d+)?)\b/gm;
+
+  return escapeCodeHtml(code).replace(pattern, (match, comment, string, keyword, booleanValue, numberValue) => {
+    if (comment) return `<span class="codeToken codeToken--comment">${match}</span>`;
+    if (string) return `<span class="codeToken codeToken--string">${match}</span>`;
+    if (keyword) return `<span class="codeToken codeToken--keyword">${match}</span>`;
+    if (booleanValue) return `<span class="codeToken codeToken--boolean">${match}</span>`;
+    if (numberValue) return `<span class="codeToken codeToken--number">${match}</span>`;
+    return match;
+  });
+}
+
 function initCodeLayer() {
   if (!codeBlock || !codeLayer) return;
-  codeBlock.textContent = makeCodeLines();
+  codeBlock.innerHTML = highlightCode(makeCodeLines());
   gsap.set(codeBlock, {
     y: 520,
     x: 140,

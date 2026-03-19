@@ -290,6 +290,26 @@ body {
   mask-repeat: no-repeat;
 }
 
+.codeToken--comment {
+  color: color-mix(in srgb, var(--accent-50) 72%, var(--secondary-90));
+}
+
+.codeToken--string {
+  color: color-mix(in srgb, var(--tertiary-50) 74%, var(--secondary-00));
+}
+
+.codeToken--keyword {
+  color: color-mix(in srgb, #d77452 84%, var(--secondary-00));
+}
+
+.codeToken--boolean {
+  color: color-mix(in srgb, #b97ad8 82%, var(--secondary-00));
+}
+
+.codeToken--number {
+  color: color-mix(in srgb, #5b9ed6 84%, var(--secondary-00));
+}
+
 /* ─── Scene ──────────────────────────────────────────────────────────── */
 .step--end {
   height: 9000vh;
