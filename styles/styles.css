@@ -15,6 +15,8 @@
   --accent-50: var(--orange-50);
   --tertiary-50: var(--green-50);
   --secondary-90: var(--grey-90);
+  --code-keyword: #b55f36;
+  --code-operator: #3f7d9b;
 
   --text-size-s: 16px;
   --text-size-m: 24px;
@@ -45,6 +47,8 @@
   --grey-90: #ffffff;
   --orange-50: #e0a386;
   --green-50: #68a87d;
+  --code-keyword: #f0b28f;
+  --code-operator: #8fd1ef;
   --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
   --muted: rgba(255, 255, 255, 0.72);
 }
@@ -191,6 +195,13 @@ body {
   transition: transform 700ms ease;
 }
 
+.mode-1.light .light {
+  background:
+    radial-gradient(520px 420px at 20% 20%, rgba(216, 154, 127, 0.28), rgba(216, 154, 127, 0) 72%),
+    radial-gradient(420px 420px at 86% 14%, rgba(255, 214, 168, 0.42), rgba(255, 214, 168, 0) 68%),
+    radial-gradient(620px 500px at 78% 82%, rgba(255, 236, 220, 0.55), rgba(255, 236, 220, 0) 74%);
+}
+
 .dust {
   position: absolute;
   inset: 0;
@@ -220,27 +231,59 @@ body {
   transform: translateY(10px);
   display: grid;
   place-items: center;
+  isolation: isolate;
+}
+
+.codeLayer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(880px 620px at 50% 22%, rgba(255, 241, 224, 0.18), transparent 48%),
+    radial-gradient(980px 760px at 50% 40%, rgba(20, 13, 10, 0.08), rgba(20, 13, 10, 0.34) 74%, rgba(11, 8, 7, 0.5) 100%),
+    linear-gradient(180deg, rgba(18, 12, 9, 0.08), rgba(8, 6, 5, 0.22));
+  z-index: 0;
+}
+
+.codeLayer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 213, 180, 0.1), transparent 16%, transparent 84%, rgba(255, 213, 180, 0.12)),
+    linear-gradient(180deg, rgba(255, 232, 212, 0.02), transparent 18%, transparent 78%, rgba(0, 0, 0, 0.18)),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 28px);
+  mix-blend-mode: screen;
+  z-index: 0;
+  opacity: 0.48;
 }
 
 .codeBlock {
   margin: 0;
-  width: min(980px, 94vw);
-  height: min(96vh, 1120px);
-  padding: 20px 24px;
+  width: min(1180px, 104vw);
+  height: min(100vh, 1240px);
+  padding: 34px 42px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 14px;
-  line-height: 1.4;
-  color: color-mix(in srgb, var(--secondary-90) 58%, transparent);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.56;
+  color: color-mix(in srgb, var(--secondary-90) 82%, transparent);
   white-space: pre;
   text-align: left;
   justify-self: center;
-  text-shadow: 0 1px 0 color-mix(in srgb, var(--secondary-00) 28%, transparent);
-  letter-spacing: .01em;
+  text-shadow:
+    0 1px 0 color-mix(in srgb, var(--secondary-00) 24%, transparent),
+    0 0 18px rgba(255, 220, 191, 0.05),
+    0 10px 28px rgba(0, 0, 0, 0.12);
+  letter-spacing: .02em;
   background: transparent;
   border: none;
   box-shadow: none;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  position: relative;
+  z-index: 1;
+  filter: saturate(0.92) contrast(1.08);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -249,7 +292,7 @@ body {
 
 /* ─── Scene ──────────────────────────────────────────────────────────── */
 .step--end {
-  height: 300vh;
+  height: 9000vh;
 }
 
 .step--outro-spacer {
@@ -482,12 +525,14 @@ body {
 }
 
 .calloutPrefix {
-  color: color-mix(in srgb, var(--secondary-90) 52%, transparent);
+  color: var(--code-keyword);
   font-style: italic;
+  font-weight: 700;
 }
 
 .calloutArrow {
-  color: color-mix(in srgb, var(--secondary-90) 50%, transparent);
+  color: var(--code-operator);
+  font-weight: 700;
 }
 
 .callout--1 { left: 10%; top: 20%; }
@@ -689,6 +734,26 @@ body {
   box-shadow: 0 12px 28px rgba(0,0,0,.12);
 }
 
+.eggModalPhotoLink {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.eggModalPhotoLink:hover {
+  transform: scale(1.015);
+  filter: brightness(1.03);
+}
+
+.eggModalPhotoLink:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent-50) 76%, transparent);
+  outline-offset: -2px;
+}
+
 .eggModalPhoto img {
   display: block;
   width: 100%;
@@ -719,6 +784,47 @@ body {
   font-size: 15px;
   line-height: 1.6;
   color: color-mix(in srgb, var(--secondary-90) 76%, transparent);
+}
+
+.eggModalViewer {
+  position: absolute;
+  inset: 18px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 14px;
+  padding: 54px 18px 18px;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--primary-20) 94%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.eggModalViewerImage {
+  display: block;
+  max-width: min(88vw, 760px);
+  max-height: min(74vh, 760px);
+  width: auto;
+  height: auto;
+  border-radius: 22px;
+  box-shadow: 0 20px 42px rgba(0,0,0,.24);
+  object-fit: contain;
+}
+
+.eggModalViewerClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--secondary-90) 12%, transparent);
+  background: color-mix(in srgb, var(--secondary-00) 88%, transparent);
+  color: color-mix(in srgb, var(--secondary-90) 92%, transparent);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 .switchTalkWrap {
@@ -1102,31 +1208,42 @@ body {
 
 .restartButton {
   margin-top: var(--m);
-  padding: 12px 18px;
-  border: 1px solid rgba(0,0,0,.1);
+  padding: 14px 22px;
+  border: 1px solid color-mix(in srgb, var(--accent-50) 54%, transparent);
   border-radius: 999px;
-  background: rgba(255,255,255,.72);
-  color: var(--secondary-90);
+  background: color-mix(in srgb, var(--accent-50) 22%, var(--secondary-00));
+  color: color-mix(in srgb, var(--secondary-90) 96%, transparent);
   font: inherit;
-  font-size: 14px;
-  letter-spacing: .04em;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .08em;
   text-transform: uppercase;
   cursor: pointer;
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
-  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.12),
+    0 0 0 6px color-mix(in srgb, var(--accent-50) 10%, transparent);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
 }
 
 .restartButton:hover {
-  transform: translateY(6px);
-  background: rgba(255,255,255,.9);
-  box-shadow: 0 10px 24px rgba(0,0,0,.10);
+  transform: translateY(6px) scale(1.02);
+  background: color-mix(in srgb, var(--accent-50) 28%, var(--secondary-00));
+  border-color: color-mix(in srgb, var(--accent-50) 72%, transparent);
+  box-shadow:
+    0 18px 34px rgba(0,0,0,.15),
+    0 0 0 8px color-mix(in srgb, var(--accent-50) 14%, transparent);
 }
 
 .restartButton:focus-visible {
-  outline: 2px solid rgba(0, 108, 63, 0.38);
+  outline: 2px solid color-mix(in srgb, var(--accent-50) 82%, transparent);
   outline-offset: 3px;
+}
+
+.mode-1.dark .restartButton {
+  color: #1b1714;
 }
 
 /* ─── Scroll Track ───────────────────────────────────────────────────── */
@@ -1135,7 +1252,7 @@ body {
 .step--intro { height: 300vh; }
 .step--arrival { height: 150vh; }
 .step--first-contact { height: 210vh; }
-.step--memory { height: 640vh; }
+.step--memory { height: 461vh; }
 
 .sticky-scene::after {
   content: "";

@@ -940,15 +940,21 @@
             <h2 class="eggModalTitle" id="eggModalTitle">The Story Behind This Story</h2>
             <div class="eggModalGallery">
               <figure class="eggModalPhoto eggModalPhoto--family">
-                <img src="assets/family.jpg" alt="Family photo holding both bunnies" />
+                <button class="eggModalPhotoLink" type="button" data-full-image="assets/family.jpg" data-full-alt="Family photo holding both bunnies" aria-label="View full family photo">
+                  <img src="assets/family.jpg" alt="Family photo holding both bunnies" />
+                </button>
               </figure>
               <div class="eggModalPair">
                 <figure class="eggModalPhoto eggModalPhoto--bunny">
-                  <img src="assets/gizmo.JPG" alt="Gizmo close-up portrait" />
+                  <button class="eggModalPhotoLink" type="button" data-full-image="assets/gizmo.JPG" data-full-alt="Gizmo close-up portrait" aria-label="View full photo of Gizmo">
+                    <img src="assets/gizmo.JPG" alt="Gizmo close-up portrait" />
+                  </button>
                   <figcaption>Gizmo</figcaption>
                 </figure>
                 <figure class="eggModalPhoto eggModalPhoto--bunny">
-                  <img src="assets/zola.JPG" alt="Zola close-up portrait" />
+                  <button class="eggModalPhotoLink" type="button" data-full-image="assets/zola.JPG" data-full-alt="Zola close-up portrait" aria-label="View full photo of Zola">
+                    <img src="assets/zola.JPG" alt="Zola close-up portrait" />
+                  </button>
                   <figcaption>Zola</figcaption>
                 </figure>
               </div>
@@ -957,6 +963,10 @@
               <br>
               <br>
               Naturally a little fearful, but still jumping in. So while you scroll through their story, know it's also mine.</p>
+            <div class="eggModalViewer" id="eggModalViewer" aria-hidden="true">
+              <button class="eggModalViewerClose" id="eggModalViewerClose" type="button" aria-label="Close full photo">Close photo</button>
+              <img class="eggModalViewerImage" id="eggModalViewerImage" src="" alt="" />
+            </div>
           </div>
         </div>
       </div>

@@ -60,6 +60,9 @@ const switchTalkWrap = document.getElementById("switchTalkWrap");
 const switchEggWrap = document.getElementById("switchEggWrap");
 const eggModal = document.getElementById("eggModal");
 const eggModalClose = document.getElementById("eggModalClose");
+const eggModalViewer = document.getElementById("eggModalViewer");
+const eggModalViewerImage = document.getElementById("eggModalViewerImage");
+const eggModalViewerClose = document.getElementById("eggModalViewerClose");
 const memoryScenes = document.getElementById("memoryScenes");
 const memoryTrack = document.getElementById("memoryTrack");
 const memoryMomentEat = document.getElementById("memoryMomentEat");
@@ -126,6 +129,22 @@ const END_REST_CAPTION = {
   text: "And then I rest. Because I know I can try again.",
   small: ""
 };
+
+const END_INTRO_CAPTION = {
+  kicker: "THE END",
+  text: "The world still surprises me. I still make mistakes. I still have to listen.",
+  small: ""
+};
+
+const END_ACTION_CAPTION = {
+  kicker: "THE END",
+  text: "But now, when something new arrives, I don't freeze the way I used to. I watch. I test. I learn.",
+  small: ""
+};
+
+const END_BALL_START_X = -420;
+const END_ACTION_START = 0.46;
+const END_REST_START = 0.79;
 
 /* ─── Code content ───────────────────────────────────────────────────── */
 function makeCodeLines() {
@@ -204,8 +223,16 @@ function makeCodeLines() {
 function initCodeLayer() {
   if (!codeBlock || !codeLayer) return;
   codeBlock.textContent = makeCodeLines();
-  gsap.set(codeBlock, { y: 520, x: 140 });
-  gsap.set(codeLayer, { opacity: 0, y: 10 });
+  gsap.set(codeBlock, {
+    y: 520,
+    x: 140,
+    rotationX: 16,
+    rotationZ: -4,
+    scale: 1.08,
+    transformPerspective: 1400,
+    transformOrigin: "50% 12%"
+  });
+  gsap.set(codeLayer, { autoAlpha: 0, y: 10 });
 }
 
 /* ─── Intro zoom math ────────────────────────────────────────────────── */
@@ -333,8 +360,41 @@ function openEggModal() {
   });
 }
 
+function openEggPhoto(src, alt) {
+  if (!eggModalViewer || !eggModalViewerImage) return;
+  eggModalViewerImage.src = src;
+  eggModalViewerImage.alt = alt || "";
+  gsap.killTweensOf(eggModalViewer);
+  gsap.set(eggModalViewer, { visibility: "visible", pointerEvents: "auto" });
+  gsap.to(eggModalViewer, {
+    opacity: 1,
+    duration: 0.18,
+    ease: "power2.out",
+    overwrite: true
+  });
+}
+
+function closeEggPhoto() {
+  if (!eggModalViewer) return;
+  gsap.killTweensOf(eggModalViewer);
+  gsap.to(eggModalViewer, {
+    opacity: 0,
+    duration: 0.16,
+    ease: "power2.out",
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(eggModalViewer, { visibility: "hidden", pointerEvents: "none" });
+      if (eggModalViewerImage) {
+        eggModalViewerImage.removeAttribute("src");
+        eggModalViewerImage.alt = "";
+      }
+    }
+  });
+}
+
 function closeEggModal() {
   if (!eggModal) return;
+  closeEggPhoto();
   gsap.killTweensOf(eggModal);
   gsap.to(eggModal, {
     opacity: 0,
@@ -356,9 +416,20 @@ function bindEggModal() {
     eggModalClose.addEventListener("click", closeEggModal);
   }
 
+  document.querySelectorAll(".eggModalPhotoLink").forEach((button) => {
+    button.addEventListener("click", () => {
+      openEggPhoto(button.dataset.fullImage || "", button.dataset.fullAlt || "");
+    });
+  });
+
+  if (eggModalViewerClose) {
+    eggModalViewerClose.addEventListener("click", closeEggPhoto);
+  }
+
   if (eggModal) {
     eggModal.addEventListener("click", (event) => {
       if (event.target === eggModal) closeEggModal();
+      if (event.target === eggModalViewer) closeEggPhoto();
     });
   }
 
@@ -830,7 +901,7 @@ function resetEndAnimation() {
   gsap.set(endBallWrap, {
     visibility: "hidden",
     opacity: 0,
-    x: 0,
+    x: END_BALL_START_X,
     y: 0
   });
 
@@ -881,7 +952,7 @@ function resetEndArtifacts() {
   gsap.set(endBallWrap, {
     visibility: "hidden",
     opacity: 0,
-    x: 0,
+    x: END_BALL_START_X,
     y: 0
   });
 
@@ -897,7 +968,8 @@ function showEndBall() {
   if (!endBallWrap) return;
   gsap.set(endBallWrap, {
     visibility: "visible",
-    opacity: 1
+    opacity: 1,
+    x: END_BALL_START_X
   });
 }
 
@@ -923,7 +995,7 @@ function initEndScrollAnimation() {
   });
 
   gsap.set(endBallWrap, {
-    x: 0,
+    x: END_BALL_START_X,
     y: 0,
     opacity: 0,
     visibility: "hidden"
@@ -962,36 +1034,42 @@ function initEndScrollAnimation() {
       scrub: 1,
       onEnter: () => {
         showStorySideBunny();
-        showEndBall();
         stopEndBreathing({ resetPose: true });
+        hideEndBall();
         if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
         if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
         if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
-        setCaption(6, { animate: false });
+        setCaptionContent(END_INTRO_CAPTION, { animate: false });
         hideRestartButton();
       },
       onEnterBack: () => {
         showStorySideBunny();
-        showEndBall();
         stopEndBreathing({ resetPose: true });
+        hideEndBall();
         if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
         if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
         if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
-        setCaption(6, { animate: false });
+        setCaptionContent(END_INTRO_CAPTION, { animate: false });
         hideRestartButton();
       },
       onUpdate: (self) => {
-        if (self.progress >= 0.68) {
+        if (self.progress >= END_REST_START) {
           if (standEyeDark) gsap.set(standEyeDark, { opacity: 0, visibility: "visible" });
           if (standEyeHi) gsap.set(standEyeHi, { opacity: 0, visibility: "visible" });
           if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 1, visibility: "visible" });
           setCaptionContent(END_REST_CAPTION, { animate: false });
           showRestartButton();
+        } else if (self.progress >= END_ACTION_START) {
+          if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
+          if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
+          if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
+          setCaptionContent(END_ACTION_CAPTION, { animate: false });
+          hideRestartButton();
         } else {
           if (standEyeDark) gsap.set(standEyeDark, { opacity: 1, visibility: "visible" });
           if (standEyeHi) gsap.set(standEyeHi, { opacity: 1, visibility: "visible" });
           if (eyelidBlink) gsap.set(eyelidBlink, { opacity: 0, visibility: "hidden" });
-          setCaption(6, { animate: false });
+          setCaptionContent(END_INTRO_CAPTION, { animate: false });
           hideRestartButton();
         }
       },
@@ -1012,131 +1090,131 @@ function initEndScrollAnimation() {
       opacity: 1,
       visibility: "visible",
       duration: 0.04
-    }, 0)
+    }, 0.48)
+
+    .to(endBallWrap, {
+      x: 96,
+      duration: 0.20,
+      ease: "none"
+    }, 0.50)
+
+    .to(ballGroup, {
+      rotation: 240,
+      duration: 0.20,
+      ease: "none"
+    }, 0.50)
 
     .to("#bunnyStory #bunnyGroup", {
       rotation: -2,
       duration: 0.10,
       ease: "none"
-    }, 0.18)
+    }, 0.62)
 
     .to("#bunnyStory #headGroup", {
       rotation: -10,
       duration: 0.12,
       ease: "none"
-    }, 0.18)
+    }, 0.62)
 
     .to("#bunnyStory #headGroup", {
       rotation: 18,
       duration: 0.08,
       ease: "none"
-    }, 0.32)
-
-    .to(endBallWrap, {
-      x: -18,
-      duration: 0.03,
-      ease: "none"
-    }, 0.40)
-
-    .to(ballGroup, {
-      rotation: -25,
-      duration: 0.03,
-      ease: "none"
-    }, 0.40)
+    }, 0.68)
 
     .to(endBallWrap, {
       x: -2250,
       duration: 0.34,
       ease: "none"
-    }, 0.43)
+    }, 0.66)
 
     .to(ballGroup, {
       rotation: -1000,
       duration: 0.34,
       ease: "none"
-    }, 0.43)
+    }, 0.66)
 
     .to(endBallWrap, {
       y: -18,
       duration: 0.06,
       ease: "none"
-    }, 0.49)
+    }, 0.72)
 
     .to(endBallWrap, {
       y: 0,
       duration: 0.08,
       ease: "none"
-    }, 0.55)
+    }, 0.78)
 
     .to("#bunnyStory #headGroup", {
       rotation: 0,
       duration: 0.12,
       ease: "none"
-    }, 0.48)
+    }, 0.74)
 
     .to("#bunnyStory #bunnyGroup", {
       rotation: 0,
       duration: 0.12,
       ease: "none"
-    }, 0.53)
+    }, 0.78)
 
     .to(endBallWrap, {
       opacity: 0,
       duration: 0.04,
       ease: "none"
-    }, 0.66)
+    }, 0.81)
 
     .to([standEyeDark, standEyeHi].filter(Boolean), {
       opacity: 0,
       duration: 0.04,
       ease: "none"
-    }, 0.60)
+    }, 0.80)
 
     .to(eyelidBlink, {
       opacity: 1,
       visibility: "visible",
       duration: 0.05,
       ease: "none"
-    }, 0.60)
+    }, 0.80)
 
     .to(poseStand, {
       opacity: 0,
       duration: 0.10,
       ease: "none"
-    }, 0.68)
+    }, 0.84)
 
     .to(poseLay, {
       opacity: 1,
       visibility: "visible",
       duration: 0.12,
       ease: "none"
-    }, 0.70)
+    }, 0.86)
 
     .to(bunnyStory, {
       y: 6,
       scaleY: 0.985,
       duration: 0.08,
       ease: "none"
-    }, 0.76)
+    }, 0.92)
 
     .to(bunnyStory, {
       y: 4,
       scaleY: 1,
       duration: 0.08,
       ease: "none"
-    }, 0.84)
+    }, 0.97)
 
     .to(bunnyStory, {
       scaleY: 1.012,
       duration: 0.06,
       ease: "none"
-    }, 0.90)
+    }, 0.985)
 
     .to(bunnyStory, {
       scaleY: 1,
       duration: 0.06,
       ease: "none"
-    }, 0.96);
+    }, 1.02);
 
   endBallTL.scrollTrigger?.vars && ScrollTrigger.create({
     trigger: endStep,
@@ -1144,7 +1222,7 @@ function initEndScrollAnimation() {
     end: "bottom center",
     scrub: 1,
     onUpdate: (self) => {
-      if (self.progress >= 0.965) {
+      if (self.progress >= 0.975) {
         startEndBreathing();
       } else {
         stopEndBreathing();
@@ -2164,15 +2242,18 @@ function setup() {
     ScrollTrigger.create({
       trigger: step2,
       start: "top top",
-      end: "bottom top",
-      onEnter: () => gsap.to(codeLayer, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }),
-      onEnterBack: () => gsap.to(codeLayer, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }),
-      onLeave: () => gsap.to(codeLayer, { opacity: 0, y: 10, duration: 0.25, ease: "power2.in" }),
-      onLeaveBack: () => gsap.to(codeLayer, { opacity: 0, y: 10, duration: 0.25, ease: "power2.in" })
+      end: "bottom 72%",
+      onEnter: () => gsap.to(codeLayer, { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out", overwrite: "auto" }),
+      onEnterBack: () => gsap.to(codeLayer, { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out", overwrite: "auto" }),
+      onLeave: () => gsap.to(codeLayer, { autoAlpha: 0, y: 10, duration: 0.25, ease: "power2.in", overwrite: "auto" }),
+      onLeaveBack: () => gsap.to(codeLayer, { autoAlpha: 0, y: 10, duration: 0.25, ease: "power2.in", overwrite: "auto" })
     });
 
     gsap.to(codeBlock, {
-      y: -1400,
+      y: -1050,
+      rotationX: 10,
+      rotationZ: -1.5,
+      scale: 1.14,
       ease: "none",
       scrollTrigger: {
         trigger: step2,
